@@ -1,0 +1,17 @@
+root = true
+
+[*]
+insert_final_newline = true
+max_line_length = 100
+
+[*.{cs,cshtml,razor,html,xml,js,css,csproj}]
+indent_style = tab
+tab_width = 4
+trim_trailing_whitespace = true
+
+[*.cs]
+csharp_new_line_before_open_brace = none
+dotnet_style_qualification_for_field = true
+dotnet_style_qualification_for_property = true
+dotnet_style_qualification_for_method = true
+dotnet_style_qualification_for_event = true

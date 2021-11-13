@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>Start.Server-1D799CBA-C3C7-4198-970E-227998F2DFE2</UserSecretsId>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.11" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Client\Start.Client.csproj" />
+		<ProjectReference Include="..\Shared\Start.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Data\Services\" />
+	  <None Remove="Data\Services\Interfaces\" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Data\Services\" />
+	  <Folder Include="Data\Services\Interfaces\" />
+	</ItemGroup>
+</Project>
