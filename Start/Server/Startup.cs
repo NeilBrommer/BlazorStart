@@ -41,6 +41,8 @@ namespace Start.Server {
 			services.AddRazorPages();
 
 			services.AddScoped<IBookmarkService, BookmarkService>();
+			services.AddScoped<IBookmarkGroupService, BookmarkGroupService>();
+			services.AddScoped<IBookmarkContainerService, BookmarkContainerService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request
@@ -49,7 +51,6 @@ namespace Start.Server {
 			ApplicationDbContext context) {
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
-				app.UseMigrationsEndPoint();
 				app.UseWebAssemblyDebugging();
 			}
 			else {

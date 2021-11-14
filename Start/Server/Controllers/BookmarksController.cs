@@ -30,14 +30,20 @@ namespace Start.Server.Controllers {
 		}
 		*/
 
-		[HttpPost]
-		public Bookmark CreateBookmark(string title, string url, string? notes,
-			int bookmarkGroupId) {
-			string userId = this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
-			return bookmarkService.CreateBookmark(userId, title, url, notes, bookmarkGroupId);
+		[HttpGet]
+		public (BookmarkStatus, Bookmark?) GetBookmark(int bookmarkId) {
+			return this.bookmarkService.GetBookmark(this.GetUserId(), bookmarkId);
 		}
 
+		[HttpPost]
+		public (BookmarkStatus, Bookmark?) CreateBookmark(string title, string url, string? notes,
+			int bookmarkGroupId) {
+			return this.bookmarkService.CreateBookmark(this.GetUserId(), title, url, notes,
+				bookmarkGroupId);
+		}
 
+		private string GetUserId() {
+			return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+		}
 	}
 }

@@ -15,7 +15,7 @@ namespace Start.Server.Data.Services {
 		}
 
 		public (BookmarkStatus, Bookmark?) GetBookmark(string userId, int bookmarkId) {
-			if (!IsBookmarkOwner(userId, bookmarkId))
+			if (!BookmarkOwnershipTools.IsBookmarkOwner(this.db, userId, bookmarkId))
 				return (BookmarkStatus.OwnerDoesNotMatch, null);
 
 			Bookmark? bookmark = this.db.Bookmarks
@@ -33,18 +33,17 @@ namespace Start.Server.Data.Services {
 				.ToList();
 		}
 
-		public Bookmark CreateBookmark(string userId, string title, string url, string? notes,
+		public (BookmarkStatus, Bookmark?) CreateBookmark(string userId, string title, string url, string? notes,
 			int bookmarkGroupId) {
-			if (!this.IsBookmarkGroupOwner(userId, bookmarkGroupId))
-				throw new SecurityException(
-					"The provided user ID doesn't match the bookmark group owner ID");
+			if (!BookmarkOwnershipTools.IsBookmarkGroupOwner(this.db, userId, bookmarkGroupId))
+				return (BookmarkStatus.OwnerDoesNotMatch, null);
 
 			Bookmark newBookmark = new(title, url, bookmarkGroupId);
 
 			db.Bookmarks.Add(newBookmark);
 			db.SaveChanges();
 
-			return newBookmark;
+			return (BookmarkStatus.OK, newBookmark);
 		}
 
 		public (BookmarkStatus, Bookmark?) UpdateBookmark(string userId, Bookmark bookmark) {
@@ -54,10 +53,11 @@ namespace Start.Server.Data.Services {
 			if (existingBookmark == null)
 				return (BookmarkStatus.BookmarkDoesNotExist, null);
 
-			if (!IsBookmarkOwner(userId, bookmark.BookmarkId))
+			if (!BookmarkOwnershipTools.IsBookmarkOwner(this.db, userId, bookmark.BookmarkId))
 				return (BookmarkStatus.OwnerDoesNotMatch, null);
 
-			if (!IsBookmarkGroupOwner(userId, bookmark.BookmarkGroupId))
+			if (!BookmarkOwnershipTools
+				.IsBookmarkGroupOwner(this.db, userId, bookmark.BookmarkGroupId))
 				return (BookmarkStatus.OwnerDoesNotMatch, null);
 
 			db.Entry(bookmark).State = EntityState.Modified;
@@ -73,31 +73,13 @@ namespace Start.Server.Data.Services {
 			if (bookmark == null)
 				return BookmarkStatus.BookmarkDoesNotExist;
 
-			if (!IsBookmarkOwner(userId, bookmarkId))
+			if (!BookmarkOwnershipTools.IsBookmarkOwner(this.db, userId, bookmarkId))
 				return BookmarkStatus.OwnerDoesNotMatch;
 
 			db.Bookmarks.Remove(bookmark);
 			db.SaveChanges();
 
 			return BookmarkStatus.OK;
-		}
-
-		private bool IsBookmarkOwner(string userId, int bookmarkId) {
-			string? bookmarkOwnerId = this.db.Bookmarks
-				.Where(b => b.BookmarkId == bookmarkId)
-				.Select(b => b.BookmarkGroup!.BookmarkContainer!.ApplicationUserId)
-				.SingleOrDefault();
-
-			return userId == bookmarkOwnerId;
-		}
-
-		private bool IsBookmarkGroupOwner(string userId, int bookmarkGroupId) {
-			string? groupOwnerId = this.db.BookmarkGroups
-				.Where(bg => bg.BookmarkGroupId == bookmarkGroupId)
-				.Select(bg => bg.BookmarkContainer!.ApplicationUserId)
-				.SingleOrDefault();
-
-			return userId == groupOwnerId;
 		}
 	}
 }
