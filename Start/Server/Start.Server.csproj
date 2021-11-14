@@ -16,6 +16,7 @@
 	<ItemGroup>
 	  <None Remove="Data\Services\" />
 	  <None Remove="Data\Services\Interfaces\" />
+	  <None Remove="Extensions\" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -31,5 +32,6 @@
 	<ItemGroup>
 	  <Folder Include="Data\Services\" />
 	  <Folder Include="Data\Services\Interfaces\" />
+	  <Folder Include="Extensions\" />
 	</ItemGroup>
 </Project>

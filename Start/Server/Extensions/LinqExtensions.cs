@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Start.Server {
+namespace Start.Server.Extensions {
 	/// <summary>Extension methods for LINQ queries</summary>
 	public static class LinqExtensions {
 		/// <summary>
