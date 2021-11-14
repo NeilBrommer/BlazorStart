@@ -12,7 +12,7 @@ namespace Start.Server.Data.Migrations
                 {
                     BookmarkContainerId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     ApplicationUserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

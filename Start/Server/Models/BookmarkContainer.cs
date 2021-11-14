@@ -9,6 +9,7 @@ namespace Start.Server.Models {
 		[Key]
 		public int BookmarkContainerId { get; set; }
 
+		[MaxLength(300)]
 		public string Title { get; set; }
 
 		/// <summary>The unique ID of the user that this container belongs to</summary>
