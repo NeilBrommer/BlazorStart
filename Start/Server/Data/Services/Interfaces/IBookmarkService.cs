@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Start.Server.Models;
+using Start.Shared;
 
 namespace Start.Server.Data.Services.Interfaces {
 	public interface IBookmarkService {
