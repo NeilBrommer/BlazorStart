@@ -19,7 +19,7 @@ namespace Start.Shared {
 		}
 
 		public BookmarkContainerDto(int bookmarkContainerId, string title,
-			IList<BookmarkGroupDto> bookmarkGroups) : this(bookmarkContainerId, title) {
+			IList<BookmarkGroupDto>? bookmarkGroups) : this(bookmarkContainerId, title) {
 			this.BookmarkGroups = bookmarkGroups;
 		}
 	}

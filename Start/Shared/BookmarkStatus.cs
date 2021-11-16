@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Start.Server.Data.Services.Interfaces {
+namespace Start.Shared {
 	public enum BookmarkStatus {
 		OK = 1,
 		BookmarkDoesNotExist = 2,

@@ -23,7 +23,7 @@ namespace Start.Shared {
 		}
 
 		public BookmarkGroupDto(int bookmarkGroupId, string title, string color,
-			IList<BookmarkDto> bookmarks) : this(bookmarkGroupId, title, color) {
+			IList<BookmarkDto>? bookmarks) : this(bookmarkGroupId, title, color) {
 			this.Bookmarks = bookmarks;
 		}
 	}
