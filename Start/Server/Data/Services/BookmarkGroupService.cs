@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Extensions;
 using Start.Server.Models;
+using Start.Shared;
 
 namespace Start.Server.Data.Services {
 	public class BookmarkGroupService : IBookmarkGroupService {

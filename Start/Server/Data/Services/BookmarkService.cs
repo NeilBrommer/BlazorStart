@@ -5,6 +5,7 @@ using System.Security;
 using Microsoft.EntityFrameworkCore;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Models;
+using Start.Shared;
 
 namespace Start.Server.Data.Services {
 	public class BookmarkService : IBookmarkService {
