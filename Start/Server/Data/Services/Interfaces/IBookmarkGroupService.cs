@@ -5,15 +5,15 @@ using Start.Shared;
 
 namespace Start.Server.Data.Services.Interfaces {
 	public interface IBookmarkGroupService {
-		public (BookmarkStatus, BookmarkGroup?) GetBookmarkGroup(string userId,
+		public BookmarkGroup? GetBookmarkGroup(string userId,
 			int bookmarkGroupId, bool includeBookmarks = false);
 		public IList<BookmarkGroup> GetUserBookmarkGroups(string userId,
 			bool includeBookmarks = false);
 
-		public (BookmarkStatus, BookmarkGroup?) CreateBookmarkGroup(string userId, string title,
+		public BookmarkGroup? CreateBookmarkGroup(string userId, string title,
 			string color, int bookmarkContainerId);
-		public (BookmarkStatus, BookmarkGroup?) UpdateBookmarkGroup(string userId,
+		public BookmarkGroup? UpdateBookmarkGroup(string userId,
 			BookmarkGroup bookmarkGroup);
-		public BookmarkStatus DeleteBookmarkGroup(string userId, int bookmarkGroupId);
+		public bool DeleteBookmarkGroup(string userId, int bookmarkGroupId);
 	}
 }

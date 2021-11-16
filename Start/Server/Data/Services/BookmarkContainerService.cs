@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Extensions;
 using Start.Server.Models;
-using Start.Shared;
 
 namespace Start.Server.Data.Services {
 	public class BookmarkContainerService : IBookmarkContainerService {
@@ -15,7 +13,7 @@ namespace Start.Server.Data.Services {
 			this.db = dbContext;
 		}
 
-		public (BookmarkStatus, BookmarkContainer?) GetBookmarkContainer(string userId,
+		public BookmarkContainer? GetBookmarkContainer(string userId,
 			int bookmarkContainerId, bool includeGroups = false, bool includeBookmarks = false) {
 			BookmarkContainer? bookmarkContainer = this.db.BookmarkContainers
 				.Where(bc => bc.BookmarkContainerId == bookmarkContainerId)
@@ -26,13 +24,13 @@ namespace Start.Server.Data.Services {
 				.SingleOrDefault();
 
 			if (bookmarkContainer == null)
-				return (BookmarkStatus.BookmarkDoesNotExist, null);
+				return null;
 
 			if (!BookmarkOwnershipTools
 				.IsBookmarkContainerOwner(this.db, userId, bookmarkContainerId))
-				return (BookmarkStatus.OwnerDoesNotMatch, null);
+				return null;
 
-			return (BookmarkStatus.OK, bookmarkContainer);
+			return bookmarkContainer;
 		}
 
 		public IList<BookmarkContainer> GetUserBookmarkContainers(string userId,
@@ -46,47 +44,47 @@ namespace Start.Server.Data.Services {
 				.ToList();
 		}
 
-		public (BookmarkStatus, BookmarkContainer?) CreateBookmarkContainer(string userId,
+		public BookmarkContainer? CreateBookmarkContainer(string userId,
 			string title) {
+			// No need to worry about ownership here
+
 			BookmarkContainer newContainer = new(userId, title);
 			this.db.BookmarkContainers.Add(newContainer);
-			return (BookmarkStatus.OK, newContainer);
+			return newContainer;
 		}
 
-		public (BookmarkStatus, BookmarkContainer?) UpdateBookmarkContainer(string userId,
+		public BookmarkContainer? UpdateBookmarkContainer(string userId,
 			BookmarkContainer bookmarkContainer) {
 			BookmarkContainer? exitingBookmarkContainer = this.db.BookmarkContainers
 				.SingleOrDefault(bc => bc.BookmarkContainerId
 					== bookmarkContainer.BookmarkContainerId);
 
-			if (exitingBookmarkContainer == null)
-				return (BookmarkStatus.BookmarkDoesNotExist, null);
-
-			if (!BookmarkOwnershipTools
+			if (exitingBookmarkContainer == null
+				|| !BookmarkOwnershipTools
 				.IsBookmarkContainerOwner(this.db, userId, bookmarkContainer.BookmarkContainerId))
-				return (BookmarkStatus.OwnerDoesNotMatch, null);
+				return null;
 
 			this.db.Entry(bookmarkContainer).State = EntityState.Modified;
 			this.db.SaveChanges();
 
-			return (BookmarkStatus.OK, bookmarkContainer);
+			return bookmarkContainer;
 		}
 
-		public BookmarkStatus DeleteBookmarkContainer(string userId, int bookmarkContainerId) {
+		public bool DeleteBookmarkContainer(string userId, int bookmarkContainerId) {
 			BookmarkContainer? bookmarkContainer = this.db.BookmarkContainers
 				.Where(bc => bc.BookmarkContainerId == bookmarkContainerId)
 				.SingleOrDefault();
 
 			if (bookmarkContainer == null)
-				return (BookmarkStatus.BookmarkDoesNotExist);
+				return false;
 
 			if (!BookmarkOwnershipTools.IsBookmarkContainerOwner(this.db, userId, bookmarkContainerId))
-				return BookmarkStatus.OwnerDoesNotMatch;
+				return false;
 
 			this.db.BookmarkContainers.Remove(bookmarkContainer);
 			this.db.SaveChanges();
 
-			return BookmarkStatus.OK;
+			return true;
 		}
 	}
 }

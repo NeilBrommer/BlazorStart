@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Extensions;
-using Start.Server.Models;
 using Start.Shared;
 
 namespace Start.Server.Controllers {
@@ -35,36 +34,32 @@ namespace Start.Server.Controllers {
 		}
 
 		[HttpGet]
-		public (BookmarkStatus, BookmarkContainerDto?) GetBookmarkContainer(int bookmarkContainerId) {
-			(BookmarkStatus status, BookmarkContainer? container) = this.bookmarkContainerService
-				.GetBookmarkContainer(this.userId, bookmarkContainerId, true, true);
-
-			return (status, container?.MapToDto());
+		public BookmarkContainerDto? GetBookmarkContainer(int bookmarkContainerId) {
+			return this.bookmarkContainerService
+				.GetBookmarkContainer(this.userId, bookmarkContainerId, true, true)
+				?.MapToDto();
 		}
 
 		[HttpGet]
-		public (BookmarkStatus, BookmarkDto?) GetBookmark(int bookmarkId) {
-			(BookmarkStatus status, Bookmark? bookmark) = this.bookmarkService
-				.GetBookmark(this.userId, bookmarkId);
-
-			return (status, bookmark?.MapToDto());
+		public BookmarkDto? GetBookmark(int bookmarkId) {
+			return this.bookmarkService
+				.GetBookmark(this.userId, bookmarkId)
+				?.MapToDto();
 		}
 
 		[HttpPost]
-		public (BookmarkStatus, BookmarkDto?) CreateBookmark(string title, string url, string? notes,
+		public BookmarkDto? CreateBookmark(string title, string url, string? notes,
 			int bookmarkGroupId) {
-			(BookmarkStatus status, Bookmark? bookmark) = this.bookmarkService
-				.CreateBookmark(this.userId, title, url, notes, bookmarkGroupId);
-
-			return (status, bookmark?.MapToDto());
+			return this.bookmarkService
+				.CreateBookmark(this.userId, title, url, notes, bookmarkGroupId)
+				?.MapToDto();
 		}
 
 		[HttpPost]
-		public (BookmarkStatus, BookmarkContainerDto?) CreateBookmarkContainer(string title) {
-			(BookmarkStatus status, BookmarkContainer? container) = this
-				.bookmarkContainerService.CreateBookmarkContainer(this.userId, title);
-
-			return (status, container?.MapToDto());
+		public BookmarkContainerDto? CreateBookmarkContainer(string title) {
+			return this.bookmarkContainerService
+				.CreateBookmarkContainer(this.userId, title)
+				?.MapToDto();
 		}
 	}
 }
