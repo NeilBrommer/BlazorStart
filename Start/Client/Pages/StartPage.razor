@@ -1,0 +1,175 @@
+﻿@page "/Start"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Start.Client.Components
+@using Start.Shared
+@attribute [Authorize]
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@if (bookmarkContainers == null)
+{
+    <div class="empty">
+        <div class="empty-icon">
+            <div class="loading loading-lg"></div>
+        </div>
+        <p class="empty-title h5">Loading Containers</p>
+    </div>
+}
+else
+{
+    <ul class="containerList tab">
+        @foreach (BookmarkContainerDto container in this.bookmarkContainers)
+        {
+            string itemClasses = "tab-item";
+            if (container.BookmarkContainerId == this.selectedBookmarkContainer?.BookmarkContainerId)
+                itemClasses += " active";
+
+            <li class="@itemClasses">
+                <a @onclick="() => OnContainerSelected(container.BookmarkContainerId)">
+                    @container.Title
+                </a>
+                <button class="btn btn-clear"></button>
+            </li>
+        }
+        <li class="tab-item tab-action">
+            <button @onclick="OnCreateContainerClicked" class="btn btn-link"
+                    title="Create New Container" aria-label="Create New Container">
+                +
+            </button>
+        </li>
+    </ul>
+
+    <div class="activeBookmarkContainer">
+        @if (this.selectedBookmarkContainer == null)
+        {
+            <div class="empty">
+                <div class="empty-icon">
+                    <div class="loading loading-icon"></div>
+                </div>
+                <p class="empty-title h5">Loading Bookmarks</p>
+            </div>
+            <p class="text-center">Loading Bookmarks</p>
+        }
+        else if (!this.selectedBookmarkContainer.BookmarkGroups?.Any() ?? true)
+        {
+            <div class="empty">
+                <div class="empty-icon">
+                    <i class="icon icon-3x icon-bookmark"></i>
+                </div>
+                <p class="empty-title h5">No Bookmark Groups</p>
+            </div>
+        }
+        else
+        {
+            @foreach (BookmarkGroupDto group in this.selectedBookmarkContainer.BookmarkGroups!)
+            {
+                <BookmarkGroup Group="group" />
+            }
+        }
+    </div>
+
+    <CreateContainer IsOpen="showCreateContainerForm" OnClose="this.OnCloseCreateContainer"
+                     OnCreated="this.OnContainerCreated" />
+}
+
+@code
+{
+    private IList<BookmarkContainerDto>? bookmarkContainers;
+    private BookmarkContainerDto? selectedBookmarkContainer;
+    private bool showCreateContainerForm = false;
+    private bool showCreateGroupForm = false;
+    private bool showCreateBookmarkForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadContainers();
+    }
+
+    protected async Task LoadContainers()
+    {
+        try {
+            this.bookmarkContainers = await Http
+                .GetFromJsonAsync<IList<BookmarkContainerDto>>(
+                    "Bookmarks/GetAllBookmarkContainers");
+
+            if (this.bookmarkContainers == null || !this.bookmarkContainers.Any()) {
+                HttpResponseMessage response = await Http
+                    .PostAsJsonAsync("Bookmarks/CreateBookmarkContainer", "Default");
+
+                BookmarkContainerDto? container = await response
+                    .RequestMessage
+                    !.Content
+                    !.ReadFromJsonAsync<BookmarkContainerDto?>();
+            }
+
+            await this.OnContainerSelected(await this.GetSelectedContainerId());
+        }
+        catch (AccessTokenNotAvailableException e) {
+            e.Redirect();
+        }
+    }
+
+    protected async Task OnContainerSelected(int bookmarkContainerId)
+    {
+        try
+        {
+            BookmarkContainerDto? bookmarkContainer = await Http
+                .GetFromJsonAsync<BookmarkContainerDto?>(
+                    $"Bookmarks/GetBookmarkContainer/{bookmarkContainerId}");
+
+            await this.SetSelectedContainer(bookmarkContainerId);
+            this.selectedBookmarkContainer = bookmarkContainer;
+        }
+        catch (AccessTokenNotAvailableException e)
+        {
+            e.Redirect();
+        }
+    }
+
+    protected async Task OnDeleteContainerClicked()
+    {
+
+    }
+
+    protected void OnCreateContainerClicked()
+    {
+        this.showCreateContainerForm = true;
+    }
+
+    protected void OnCloseCreateContainer()
+    {
+        this.showCreateContainerForm = false;
+    }
+
+    protected async Task OnContainerCreated(BookmarkContainerDto newContainer)
+    {
+        if (this.bookmarkContainers == null)
+            return;
+
+        this.bookmarkContainers.Add(newContainer);
+        this.showCreateContainerForm = false;
+        await SetSelectedContainer(newContainer.BookmarkContainerId);
+    }
+
+    // Save the currently selected container in LocalStorage so that the same container remains
+    // selected between new tabs
+
+    protected async Task<int> GetSelectedContainerId()
+    {
+        bool hasValue = await localStorage.ContainKeyAsync("SelectedContainer");
+
+        if (hasValue)
+            return await localStorage.GetItemAsync<int>("SelectedContainer");
+
+        // Default to the first container
+        int firstContainer = this.bookmarkContainers!.First().BookmarkContainerId;
+        await this.SetSelectedContainer(firstContainer);
+        return firstContainer;
+    }
+
+    protected async Task SetSelectedContainer(int selectedContainerId)
+    {
+        await localStorage.SetItemAsync<int>("SelectedContainer", selectedContainerId);
+    }
+}

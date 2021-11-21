@@ -9,41 +9,39 @@ using Start.Shared;
 namespace Start.Server.Controllers {
 	[Authorize]
 	[ApiController]
-	[Route("[controller]")]
+	[Route("[controller]/[action]")]
 	public class BookmarksController : ControllerBase {
 		private readonly IBookmarkContainerService bookmarkContainerService;
 		private readonly IBookmarkGroupService bookmarkGroupService;
 		private readonly IBookmarkService bookmarkService;
-
-		private readonly string userId;
 
 		public BookmarksController(IBookmarkContainerService bookmarkContainerService,
 			IBookmarkGroupService bookmarkGroupService, IBookmarkService bookmarkService) {
 			this.bookmarkContainerService = bookmarkContainerService;
 			this.bookmarkGroupService = bookmarkGroupService;
 			this.bookmarkService = bookmarkService;
-
-			this.userId = this.GetAuthorizedUserId();
 		}
 
 		[HttpGet]
 		public IList<BookmarkContainerDto> GetAllBookmarkContainers() {
-			return this.bookmarkContainerService.GetUserBookmarkContainers(this.userId)
+			return this.bookmarkContainerService.GetUserBookmarkContainers(this.GetAuthorizedUserId())
 				.Select(bc => bc.MapToDto())
 				.ToList();
 		}
 
 		[HttpGet]
+		[Route("{bookmarkContainerId}")]
 		public BookmarkContainerDto? GetBookmarkContainer(int bookmarkContainerId) {
 			return this.bookmarkContainerService
-				.GetBookmarkContainer(this.userId, bookmarkContainerId, true, true)
+				.GetBookmarkContainer(this.GetAuthorizedUserId(), bookmarkContainerId, true, true)
 				?.MapToDto();
 		}
 
 		[HttpGet]
+		[Route("{bookmarkId}")]
 		public BookmarkDto? GetBookmark(int bookmarkId) {
 			return this.bookmarkService
-				.GetBookmark(this.userId, bookmarkId)
+				.GetBookmark(this.GetAuthorizedUserId(), bookmarkId)
 				?.MapToDto();
 		}
 
@@ -51,15 +49,21 @@ namespace Start.Server.Controllers {
 		public BookmarkDto? CreateBookmark(string title, string url, string? notes,
 			int bookmarkGroupId) {
 			return this.bookmarkService
-				.CreateBookmark(this.userId, title, url, notes, bookmarkGroupId)
+				.CreateBookmark(this.GetAuthorizedUserId(), title, url, notes, bookmarkGroupId)
 				?.MapToDto();
 		}
 
 		[HttpPost]
-		public BookmarkContainerDto? CreateBookmarkContainer(string title) {
+		public BookmarkContainerDto? CreateBookmarkContainer([FromBody] string title) {
 			return this.bookmarkContainerService
-				.CreateBookmarkContainer(this.userId, title)
+				.CreateBookmarkContainer(this.GetAuthorizedUserId(), title)
 				?.MapToDto();
+		}
+
+		[HttpDelete]
+		public bool DeleteBookmarkContainer(int bookmarkContainerId) {
+			return this.bookmarkContainerService
+				.DeleteBookmarkContainer(this.GetAuthorizedUserId(), bookmarkContainerId);
 		}
 	}
 }

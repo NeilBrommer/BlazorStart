@@ -1,0 +1,31 @@
+﻿<div class="toast @AlertTypeToClass(this.Type)">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public AlertType Type { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    private string AlertTypeToClass(AlertType type)
+    {
+        switch (type)
+        {
+            case AlertType.Error: return "toast-error";
+            case AlertType.Warning: return "toast-warning";
+            case AlertType.Success: return "toast-success";
+            case AlertType.Info: return "toast-primary";
+            default: return "";
+        }
+    }
+
+    public enum AlertType
+    {
+        Error,
+        Warning,
+        Success,
+        Info,
+        None
+    }
+}

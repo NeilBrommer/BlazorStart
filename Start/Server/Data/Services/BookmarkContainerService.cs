@@ -50,6 +50,7 @@ namespace Start.Server.Data.Services {
 
 			BookmarkContainer newContainer = new(userId, title);
 			this.db.BookmarkContainers.Add(newContainer);
+			this.db.SaveChanges();
 			return newContainer;
 		}
 

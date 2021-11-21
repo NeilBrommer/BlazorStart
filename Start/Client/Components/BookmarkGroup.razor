@@ -1,0 +1,26 @@
+﻿@using Start.Shared
+
+<h2 class="bookmarkGroupTitle" style="background-color: #@this.Group.Color">
+    @this.Group.Title
+</h2>
+<ul class="bookmarkGroupList">
+    @if (this.Group.Bookmarks == null || !this.Group.Bookmarks.Any())
+    {
+        <li class="bookmarkListItem noBookmarksItem"><i>No Bookmarks</i></li>
+    }
+    else
+    {
+        foreach (BookmarkDto bookmark in this.Group.Bookmarks!)
+        {
+            <li class="bookmarkListItem">
+                <a href="@bookmark.Url" class="bookmarkLink">@bookmark.Title</a>
+            </li>
+        }
+    }
+</ul>
+
+@code
+{
+    [Parameter]
+    public BookmarkGroupDto Group { get; set; } = null!; // [Required] is a .net 6 feature
+}

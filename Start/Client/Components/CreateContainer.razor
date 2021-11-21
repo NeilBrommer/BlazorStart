@@ -1,0 +1,79 @@
+﻿@using Start.Shared
+@using System.IO
+@inject HttpClient Http
+
+<Dialog Title="Create Container" Active="this.IsOpen" OnClose="this.OnDialogClose">
+    <EditForm Model="this.model" OnValidSubmit="this.OnSubmit">
+        @if (displayError)
+        {
+            <Alert Type="Alert.AlertType.Error">
+                There was an error creating the container
+            </Alert>
+        }
+        <div class="form-group">
+            <div class="container">
+                <div class="columns">
+                    <div class="column col-12">
+                        <div>
+                            <label for="createBookmarkContainerTitle" class="form-label">Title</label>
+                            <InputText id="createBookmarkContainerTitle" name="createBookmarkContainerTitle"
+                                       class="form-input" @bind-Value="this.model.Title" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="columns">
+                    <div class="column col-12 text-right">
+                        <div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="icon icon-plus"></i> Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+</Dialog>
+
+@code {
+    [Parameter]
+    public EventCallback<BookmarkContainerDto> OnCreated { get; set; }
+    [Parameter]
+    public bool IsOpen { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private BookmarkContainerDto model = new("");
+    private bool displayError = false;
+
+    protected async void OnSubmit()
+    {
+        HttpResponseMessage response = await Http
+            .PostAsJsonAsync("Bookmarks/CreateBookmarkContainer", model.Title);
+
+        Stream stream = response.RequestMessage!.Content!.ReadAsStream();
+        StreamReader reader = new StreamReader(stream);
+        Console.WriteLine(reader.ReadToEnd());
+
+        BookmarkContainerDto? container = await response
+            !.Content
+            !.ReadFromJsonAsync<BookmarkContainerDto>();
+
+        if (container == null)
+        {
+            this.displayError = true;
+        }
+        else
+        {
+            await this.OnCreated.InvokeAsync(container);
+        }
+    }
+
+    protected async void OnDialogClose()
+    {
+        this.IsOpen = false;
+        await this.OnClose.InvokeAsync();
+    }
+}

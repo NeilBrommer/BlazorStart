@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Start.Shared {
 	public class BookmarkContainerDto {
@@ -18,6 +19,7 @@ namespace Start.Shared {
 			this.BookmarkContainerId = bookmarkContainerId;
 		}
 
+		[JsonConstructor]
 		public BookmarkContainerDto(int bookmarkContainerId, string title,
 			IList<BookmarkGroupDto>? bookmarkGroups) : this(bookmarkContainerId, title) {
 			this.BookmarkGroups = bookmarkGroups;
