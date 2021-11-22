@@ -1,3 +1,6 @@
+# Project specific
+Start/Server/app.db
+
 # globs
 Makefile.in
 *.userprefs
