@@ -28,8 +28,10 @@ else
             <li class="@itemClasses">
                 <a @onclick="() => OnContainerSelected(container.BookmarkContainerId)">
                     @container.Title
+                    <button class="btn btn-clear"
+                            @onclick="() => this.OnDeleteContainerClicked(container.BookmarkContainerId)">
+                    </button>
                 </a>
-                <button class="btn btn-clear"></button>
             </li>
         }
         <li class="tab-item tab-action">
@@ -114,6 +116,9 @@ else
     {
         try
         {
+            if (!this.bookmarkContainers?.Any(bc => bc.BookmarkContainerId == bookmarkContainerId) ?? false)
+                bookmarkContainerId = this.bookmarkContainers?.First().BookmarkContainerId ?? bookmarkContainerId;
+
             BookmarkContainerDto? bookmarkContainer = await Http
                 .GetFromJsonAsync<BookmarkContainerDto?>(
                     $"Bookmarks/GetBookmarkContainer/{bookmarkContainerId}");
@@ -127,9 +132,29 @@ else
         }
     }
 
-    protected async Task OnDeleteContainerClicked()
+    protected async Task OnDeleteContainerClicked(int bookmarkContainerId)
     {
+        try
+        {
+            HttpResponseMessage result = await Http
+                .DeleteAsync($"Bookmarks/DeleteBookmarkContainer/{bookmarkContainerId}");
 
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                if (await this.GetSelectedContainerId() == bookmarkContainerId)
+                    await this.OnContainerSelected(
+                        this.bookmarkContainers?.First().BookmarkContainerId
+                            ?? bookmarkContainerId);
+
+                this.bookmarkContainers = this.bookmarkContainers
+                    ?.Where(bc => bc.BookmarkContainerId != bookmarkContainerId)
+                    .ToList();
+            }
+        }
+        catch (AccessTokenNotAvailableException e)
+        {
+            e.Redirect();
+        }
     }
 
     protected void OnCreateContainerClicked()
@@ -149,7 +174,7 @@ else
 
         this.bookmarkContainers.Add(newContainer);
         this.showCreateContainerForm = false;
-        await SetSelectedContainer(newContainer.BookmarkContainerId);
+        await OnContainerSelected(newContainer.BookmarkContainerId);
     }
 
     // Save the currently selected container in LocalStorage so that the same container remains
