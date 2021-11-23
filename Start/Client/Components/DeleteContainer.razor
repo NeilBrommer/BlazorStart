@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+
+@{ string title = $"Delete Container \"{this.ContainerTitle}\""; }
+
+<Dialog Title="@title" Active="this.Active">
+    @if (this.ShowAlert)
+    {
+        <div class="toast toast-error">
+            There was an error deleting the bookmark container
+        </div>
+    }
+    <p>Are you sure you want to delete the bookmark container "@this.ContainerTitle"?</p>
+    <div class="text-right">
+        <button class="btn" @onclick="this.OnDialogClose">Cancel</button>
+        <button class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+    </div>
+</Dialog>
+
+@code {
+    [Parameter]
+    public int BookmarkContainerId { get; set; }
+    [Parameter]
+    public string ContainerTitle { get; set; } = null!;
+    [Parameter]
+    public bool Active { get; set; }
+    [Parameter]
+    public EventCallback<int> OnDeleted { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    public bool ShowAlert { get; set; } = false;
+
+    public async Task OnDialogClose()
+    {
+        this.Active = false;
+        await this.OnClose.InvokeAsync();
+    }
+
+    public async Task OnConfirmDelete()
+    {
+        try
+        {
+            HttpResponseMessage result = await Http
+                .DeleteAsync($"Bookmarks/DeleteBookmarkContainer/{this.BookmarkContainerId}");
+
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                await this.OnDeleted.InvokeAsync(BookmarkContainerId);
+                this.ShowAlert = false;
+                this.Active = false;
+            }
+            else
+            {
+                this.ShowAlert = true;
+            }
+        }
+        catch (AccessTokenNotAvailableException e)
+        {
+            e.Redirect();
+        }
+    }
+}

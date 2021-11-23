@@ -73,13 +73,22 @@ else
 
     <CreateContainer IsOpen="showCreateContainerForm" OnClose="this.OnCloseCreateContainer"
                      OnCreated="this.OnContainerCreated" />
+    <DeleteContainer Active="this.showDeleteContainerForm" OnClose="this.OnCloseDeleteContainer"
+                     BookmarkContainerId="this.bookmarkContainerToDelete?.BookmarkContainerId ?? 0"
+                     ContainerTitle="@(this.bookmarkContainerToDelete?.Title ?? "")"
+                     OnDeleted="this.OnContainerDeleted" />
 }
 
 @code
 {
     private IList<BookmarkContainerDto>? bookmarkContainers;
     private BookmarkContainerDto? selectedBookmarkContainer;
+
     private bool showCreateContainerForm = false;
+
+    private bool showDeleteContainerForm = false;
+    private BookmarkContainerDto? bookmarkContainerToDelete;
+
     private bool showCreateGroupForm = false;
     private bool showCreateBookmarkForm = false;
 
@@ -95,14 +104,9 @@ else
                 .GetFromJsonAsync<IList<BookmarkContainerDto>>(
                     "Bookmarks/GetAllBookmarkContainers");
 
-            if (this.bookmarkContainers == null || !this.bookmarkContainers.Any()) {
-                HttpResponseMessage response = await Http
-                    .PostAsJsonAsync("Bookmarks/CreateBookmarkContainer", "Default");
-
-                BookmarkContainerDto? container = await response
-                    .RequestMessage
-                    !.Content
-                    !.ReadFromJsonAsync<BookmarkContainerDto?>();
+            if (this.bookmarkContainers == null || !this.bookmarkContainers.Any())
+            {
+                await this.CreateDefaultContainer();
             }
 
             await this.OnContainerSelected(await this.GetSelectedContainerId());
@@ -110,6 +114,20 @@ else
         catch (AccessTokenNotAvailableException e) {
             e.Redirect();
         }
+    }
+
+    protected async Task CreateDefaultContainer()
+    {
+        HttpResponseMessage response = await Http
+            .PostAsJsonAsync("Bookmarks/CreateBookmarkContainer", "Default");
+
+        BookmarkContainerDto? container = await response
+            .RequestMessage
+            !.Content
+            !.ReadFromJsonAsync<BookmarkContainerDto?>();
+
+        if (container != null)
+            await this.OnContainerSelected(container.BookmarkContainerId);
     }
 
     protected async Task OnContainerSelected(int bookmarkContainerId)
@@ -132,29 +150,11 @@ else
         }
     }
 
-    protected async Task OnDeleteContainerClicked(int bookmarkContainerId)
+    protected void OnDeleteContainerClicked(int bookmarkContainerId)
     {
-        try
-        {
-            HttpResponseMessage result = await Http
-                .DeleteAsync($"Bookmarks/DeleteBookmarkContainer/{bookmarkContainerId}");
-
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                if (await this.GetSelectedContainerId() == bookmarkContainerId)
-                    await this.OnContainerSelected(
-                        this.bookmarkContainers?.First().BookmarkContainerId
-                            ?? bookmarkContainerId);
-
-                this.bookmarkContainers = this.bookmarkContainers
-                    ?.Where(bc => bc.BookmarkContainerId != bookmarkContainerId)
-                    .ToList();
-            }
-        }
-        catch (AccessTokenNotAvailableException e)
-        {
-            e.Redirect();
-        }
+        this.bookmarkContainerToDelete = this.bookmarkContainers
+            ?.First(bc => bc.BookmarkContainerId == bookmarkContainerId);
+        this.showDeleteContainerForm = true;
     }
 
     protected void OnCreateContainerClicked()
@@ -175,6 +175,25 @@ else
         this.bookmarkContainers.Add(newContainer);
         this.showCreateContainerForm = false;
         await OnContainerSelected(newContainer.BookmarkContainerId);
+    }
+
+    protected void OnCloseDeleteContainer()
+    {
+        this.showDeleteContainerForm = false;
+    }
+
+    protected async Task OnContainerDeleted(int bookmarkContainerId)
+    {
+        if (!this.bookmarkContainers?.Any(bc => bc.BookmarkContainerId != bookmarkContainerId) ?? false)
+            await this.CreateDefaultContainer();
+
+        if (await this.GetSelectedContainerId() == bookmarkContainerId)
+            await this.OnContainerSelected(
+                this.bookmarkContainers?.First().BookmarkContainerId ?? bookmarkContainerId);
+
+        this.bookmarkContainers = this.bookmarkContainers
+            ?.Where(bc => bc.BookmarkContainerId != bookmarkContainerId)
+            .ToList();
     }
 
     // Save the currently selected container in LocalStorage so that the same container remains
