@@ -42,7 +42,7 @@
         try
         {
             HttpResponseMessage result = await Http
-                .DeleteAsync($"Bookmarks/DeleteBookmarkContainer/{this.BookmarkContainerId}");
+                .DeleteAsync($"BookmarkContainers/Delete/{this.BookmarkContainerId}");
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {

@@ -51,7 +51,7 @@
     protected async void OnSubmit()
     {
         HttpResponseMessage response = await Http
-            .PostAsJsonAsync("Bookmarks/CreateBookmarkContainer", model.Title);
+            .PostAsJsonAsync("BookmarkContainers/Create", model.Title);
 
         Stream stream = response.RequestMessage!.Content!.ReadAsStream();
         StreamReader reader = new StreamReader(stream);

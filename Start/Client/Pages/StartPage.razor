@@ -99,10 +99,11 @@ else
 
     protected async Task LoadContainers()
     {
-        try {
+        try
+        {
             this.bookmarkContainers = await Http
                 .GetFromJsonAsync<IList<BookmarkContainerDto>>(
-                    "Bookmarks/GetAllBookmarkContainers");
+                    "BookmarkContainers");
 
             if (this.bookmarkContainers == null || !this.bookmarkContainers.Any())
             {
@@ -111,7 +112,8 @@ else
 
             await this.OnContainerSelected(await this.GetSelectedContainerId());
         }
-        catch (AccessTokenNotAvailableException e) {
+        catch (AccessTokenNotAvailableException e)
+        {
             e.Redirect();
         }
     }
@@ -119,7 +121,7 @@ else
     protected async Task CreateDefaultContainer()
     {
         HttpResponseMessage response = await Http
-            .PostAsJsonAsync("Bookmarks/CreateBookmarkContainer", "Default");
+            .PostAsJsonAsync("BookmarkContainers/Create", "Default");
 
         BookmarkContainerDto? container = await response
             .RequestMessage
@@ -139,7 +141,7 @@ else
 
             BookmarkContainerDto? bookmarkContainer = await Http
                 .GetFromJsonAsync<BookmarkContainerDto?>(
-                    $"Bookmarks/GetBookmarkContainer/{bookmarkContainerId}");
+                    $"BookmarkContainers/{bookmarkContainerId}");
 
             await this.SetSelectedContainer(bookmarkContainerId);
             this.selectedBookmarkContainer = bookmarkContainer;
