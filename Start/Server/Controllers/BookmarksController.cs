@@ -10,7 +10,7 @@ using Start.Shared;
 namespace Start.Server.Controllers {
 	[Authorize]
 	[ApiController]
-	[Route("[controller]/[action]")]
+	[Route("[controller]")]
 	public class BookmarksController : ControllerBase {
 		private readonly IBookmarkGroupService bookmarkGroupService;
 		private readonly IBookmarkService bookmarkService;
@@ -37,6 +37,7 @@ namespace Start.Server.Controllers {
 		}
 
 		[HttpPost]
+		[Route("Create")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BookmarkDto))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public IActionResult CreateBookmark(string title, string url, string? notes,
@@ -51,6 +52,19 @@ namespace Start.Server.Controllers {
 			return Created(
 				Url.Action(nameof(this.GetBookmark),new { bookmarkId = bookmark.BookmarkId }),
 				bookmark);
+		}
+
+		[HttpDelete]
+		[Route("Delete/{bookmarkId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public IActionResult DeleteBookmark(int bookmarkId) {
+			var res = this.bookmarkService.DeleteBookmark(this.GetAuthorizedUserId(), bookmarkId);
+
+			if (!res)
+				return NotFound();
+
+			return Ok();
 		}
 	}
 }
