@@ -4,7 +4,7 @@ root = true
 insert_final_newline = true
 max_line_length = 100
 
-[*.{cs,cshtml,html,xml,js,css,csproj,json}]
+[*.{cs,cshtml,html,xml,js,css,csproj,json,md}]
 indent_style = tab
 tab_width = 4
 trim_trailing_whitespace = true
