@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Start.Server.Models;
-using Start.Shared;
 
 namespace Start.Server.Data.Services.Interfaces {
 	public interface IBookmarkService {
-		public Bookmark? GetBookmark(string userId, int bookmarkId);
-		public IList<Bookmark> GetUserBookmarks(string userId);
+		public Task<Bookmark?> GetBookmark(string userId, int bookmarkId);
+		public Task<IList<Bookmark>> GetUserBookmarks(string userId);
 
-		public Bookmark? CreateBookmark(string userId, string title, string url,
+		public Task<Bookmark?> CreateBookmark(string userId, string title, string url,
 			string? notes, int bookmarkGroupId);
-		public Bookmark? UpdateBookmark(string userId, Bookmark bookmark);
-		public bool DeleteBookmark(string userId, int bookmarkId);
+		public Task<Bookmark?> UpdateBookmark(string userId, Bookmark bookmark);
+		public Task<bool> DeleteBookmark(string userId, int bookmarkId);
 	}
 }

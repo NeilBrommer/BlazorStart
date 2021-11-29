@@ -9,4 +9,14 @@
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Refit" />
+    <None Remove="Api\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="6.1.15" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +24,9 @@ namespace Start.Server.Controllers {
 		[Route("{bookmarkId}")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BookmarkDto))]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public IActionResult GetBookmark(int bookmarkId) {
-			BookmarkDto? bookmark = this.bookmarkService
-				.GetBookmark(this.GetAuthorizedUserId(), bookmarkId)
+		public async Task<IActionResult> GetBookmark(int bookmarkId) {
+			BookmarkDto? bookmark = (await this.bookmarkService
+				.GetBookmark(this.GetAuthorizedUserId(), bookmarkId))
 				?.MapToDto();
 
 			if (bookmark == null)
@@ -40,10 +39,10 @@ namespace Start.Server.Controllers {
 		[Route("Create")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BookmarkDto))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public IActionResult CreateBookmark(string title, string url, string? notes,
+		public async Task<IActionResult> CreateBookmark(string title, string url, string? notes,
 			int bookmarkGroupId) {
-			BookmarkDto? bookmark =  this.bookmarkService
-				.CreateBookmark(this.GetAuthorizedUserId(), title, url, notes, bookmarkGroupId)
+			BookmarkDto? bookmark = (await this.bookmarkService
+				.CreateBookmark(this.GetAuthorizedUserId(), title, url, notes, bookmarkGroupId))
 				?.MapToDto();
 
 			if (bookmark == null)
@@ -58,8 +57,9 @@ namespace Start.Server.Controllers {
 		[Route("Delete/{bookmarkId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public IActionResult DeleteBookmark(int bookmarkId) {
-			var res = this.bookmarkService.DeleteBookmark(this.GetAuthorizedUserId(), bookmarkId);
+		public async Task<IActionResult> DeleteBookmark(int bookmarkId) {
+			var res = await this.bookmarkService
+				.DeleteBookmark(this.GetAuthorizedUserId(), bookmarkId);
 
 			if (!res)
 				return NotFound();

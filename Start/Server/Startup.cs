@@ -9,6 +9,8 @@ using Start.Server.Data;
 using Start.Server.Models;
 using Start.Server.Data.Services;
 using Start.Server.Data.Services.Interfaces;
+using Refit;
+using Start.Shared.Api;
 
 namespace Start.Server {
 	public class Startup {

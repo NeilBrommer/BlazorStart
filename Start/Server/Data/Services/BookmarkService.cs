@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Models;
@@ -12,29 +13,29 @@ namespace Start.Server.Data.Services {
 			this.db = dbContext;
 		}
 
-		public Bookmark? GetBookmark(string userId, int bookmarkId) {
+		public async Task<Bookmark?> GetBookmark(string userId, int bookmarkId) {
 			if (!BookmarkOwnershipTools.IsBookmarkOwner(this.db, userId, bookmarkId))
 				return null;
 
-			return this.db.Bookmarks
-				.SingleOrDefault(b => b.BookmarkId == bookmarkId);
+			return await this.db.Bookmarks
+				.SingleOrDefaultAsync(b => b.BookmarkId == bookmarkId);
 		}
 
-		public IList<Bookmark> GetUserBookmarks(string userId) {
-			return this.db.Bookmarks
+		public async Task<IList<Bookmark>> GetUserBookmarks(string userId) {
+			return await this.db.Bookmarks
 				.Where(b => b.BookmarkGroup!.BookmarkContainer!.ApplicationUserId == userId)
-				.ToList();
+				.ToListAsync();
 		}
 
-		public Bookmark? CreateBookmark(string userId, string title, string url, string? notes,
+		public async Task<Bookmark?> CreateBookmark(string userId, string title, string url, string? notes,
 			int bookmarkGroupId) {
 			if (!BookmarkOwnershipTools.IsBookmarkGroupOwner(this.db, userId, bookmarkGroupId))
 				return null;
 
 			Bookmark newBookmark = new(title, url, bookmarkGroupId);
 
-			db.Bookmarks.Add(newBookmark);
-			db.SaveChanges();
+			await db.Bookmarks.AddAsync(newBookmark);
+			await db.SaveChangesAsync();
 
 			if (newBookmark.BookmarkId <= 0)
 				return null;
@@ -42,7 +43,7 @@ namespace Start.Server.Data.Services {
 			return newBookmark;
 		}
 
-		public Bookmark? UpdateBookmark(string userId, Bookmark bookmark) {
+		public async Task<Bookmark?> UpdateBookmark(string userId, Bookmark bookmark) {
 			Bookmark? existingBookmark = db.Bookmarks
 				.SingleOrDefault(b => b.BookmarkId == bookmark.BookmarkId);
 
@@ -55,12 +56,12 @@ namespace Start.Server.Data.Services {
 				return null;
 
 			db.Entry(bookmark).State = EntityState.Modified;
-			db.SaveChanges();
+			await db.SaveChangesAsync();
 
 			return bookmark;
 		}
 
-		public bool DeleteBookmark(string userId, int bookmarkId) {
+		public async Task<bool> DeleteBookmark(string userId, int bookmarkId) {
 			Bookmark? bookmark = db.Bookmarks
 				.SingleOrDefault(b => b.BookmarkId == bookmarkId);
 
@@ -71,7 +72,7 @@ namespace Start.Server.Data.Services {
 				return false;
 
 			db.Bookmarks.Remove(bookmark);
-			db.SaveChanges();
+			await db.SaveChangesAsync();
 
 			return true;
 		}

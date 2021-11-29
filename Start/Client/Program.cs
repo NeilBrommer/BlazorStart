@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Blazored.LocalStorage;
+using Refit;
+using Start.Shared.Api;
 
 namespace Start.Client {
 	public class Program {
@@ -16,12 +18,26 @@ namespace Start.Client {
 					client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
 				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
-			// Supply HttpClient instances that include access tokens when making requests to the server project
+			// Supply HttpClient instances that include access tokens when making requests to the
+			// server project
 			builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-				.CreateClient("Start.ServerAPI"));
+					.CreateClient("Start.ServerAPI"));
+
+			// Blazor will throw an error if a relative URI is used, so we have to get the base
+			// address for building the API paths
+			Uri baseUri = new(builder.HostEnvironment.BaseAddress);
+
+			builder.Services.AddRefitClient<IBookmarkContainersApi>()
+				.ConfigureHttpClient(c => {
+					c.BaseAddress = new Uri(baseUri, "BookmarkContainers");
+				})
+				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+
+			builder.Services.AddRefitClient<IBookmarksApi>()
+				.ConfigureHttpClient(c => { c.BaseAddress = new Uri(baseUri, "Bookmarks"); })
+				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 			builder.Services.AddApiAuthorization();
-
 			builder.Services.AddBlazoredLocalStorage();
 
 			await builder.Build().RunAsync();

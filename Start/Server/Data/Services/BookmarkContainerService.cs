@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Extensions;
@@ -13,15 +14,15 @@ namespace Start.Server.Data.Services {
 			this.db = dbContext;
 		}
 
-		public BookmarkContainer? GetBookmarkContainer(string userId,
+		public async Task<BookmarkContainer?> GetBookmarkContainer(string userId,
 			int bookmarkContainerId, bool includeGroups = false, bool includeBookmarks = false) {
-			BookmarkContainer? bookmarkContainer = this.db.BookmarkContainers
+			BookmarkContainer? bookmarkContainer = await this.db.BookmarkContainers
 				.Where(bc => bc.BookmarkContainerId == bookmarkContainerId)
 				.If(includeGroups, q => q.Include(bc => bc.BookmarkGroups))
 				.If(includeBookmarks, q => q
 					.Include(bc => bc.BookmarkGroups)
 					.ThenInclude(bg => bg.Bookmarks))
-				.SingleOrDefault();
+				.SingleOrDefaultAsync();
 
 			if (bookmarkContainer == null)
 				return null;
@@ -33,31 +34,31 @@ namespace Start.Server.Data.Services {
 			return bookmarkContainer;
 		}
 
-		public IList<BookmarkContainer> GetUserBookmarkContainers(string userId,
+		public async Task<IList<BookmarkContainer>> GetUserBookmarkContainers(string userId,
 			bool includeGroups = false, bool includeBookmarks = false) {
-			return this.db.BookmarkContainers
+			return await this.db.BookmarkContainers
 				.Where(bc => bc.ApplicationUserId == userId)
 				.If(includeGroups, q => q.Include(bc => bc.BookmarkGroups))
 				.If(includeBookmarks, q => q
 					.Include(bc => bc.BookmarkGroups)
 					.ThenInclude(bg => bg.Bookmarks))
-				.ToList();
+				.ToListAsync();
 		}
 
-		public BookmarkContainer? CreateBookmarkContainer(string userId,
+		public async Task<BookmarkContainer?> CreateBookmarkContainer(string userId,
 			string title) {
 			// No need to worry about ownership here
 
 			BookmarkContainer newContainer = new(userId, title);
-			this.db.BookmarkContainers.Add(newContainer);
-			this.db.SaveChanges();
+			await this.db.BookmarkContainers.AddAsync(newContainer);
+			await this.db.SaveChangesAsync();
 			return newContainer;
 		}
 
-		public BookmarkContainer? UpdateBookmarkContainer(string userId,
+		public async Task<BookmarkContainer?> UpdateBookmarkContainer(string userId,
 			BookmarkContainer bookmarkContainer) {
-			BookmarkContainer? exitingBookmarkContainer = this.db.BookmarkContainers
-				.SingleOrDefault(bc => bc.BookmarkContainerId
+			BookmarkContainer? exitingBookmarkContainer = await this.db.BookmarkContainers
+				.SingleOrDefaultAsync(bc => bc.BookmarkContainerId
 					== bookmarkContainer.BookmarkContainerId);
 
 			if (exitingBookmarkContainer == null
@@ -66,15 +67,15 @@ namespace Start.Server.Data.Services {
 				return null;
 
 			this.db.Entry(bookmarkContainer).State = EntityState.Modified;
-			this.db.SaveChanges();
+			await this.db.SaveChangesAsync();
 
 			return bookmarkContainer;
 		}
 
-		public bool DeleteBookmarkContainer(string userId, int bookmarkContainerId) {
-			BookmarkContainer? bookmarkContainer = this.db.BookmarkContainers
+		public async Task<bool> DeleteBookmarkContainer(string userId, int bookmarkContainerId) {
+			BookmarkContainer? bookmarkContainer = await this.db.BookmarkContainers
 				.Where(bc => bc.BookmarkContainerId == bookmarkContainerId)
-				.SingleOrDefault();
+				.SingleOrDefaultAsync();
 
 			if (bookmarkContainer == null)
 				return false;
@@ -83,7 +84,7 @@ namespace Start.Server.Data.Services {
 				return false;
 
 			this.db.BookmarkContainers.Remove(bookmarkContainer);
-			this.db.SaveChanges();
+			await this.db.SaveChangesAsync();
 
 			return true;
 		}

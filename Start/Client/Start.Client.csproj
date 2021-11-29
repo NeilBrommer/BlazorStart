@@ -17,6 +17,8 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.1.5" />
+    <PackageReference Include="Refit" Version="6.1.15" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.1.15" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +31,8 @@
 
   <ItemGroup>
     <None Remove="Blazored.LocalStorage" />
+    <None Remove="Refit" />
+    <None Remove="Refit.HttpClientFactory" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\Spectre\" />

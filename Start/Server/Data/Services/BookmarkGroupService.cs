@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Start.Server.Data.Services.Interfaces;
 using Start.Server.Extensions;
 using Start.Server.Models;
-using Start.Shared;
 
 namespace Start.Server.Data.Services {
 	public class BookmarkGroupService : IBookmarkGroupService {
@@ -15,12 +14,12 @@ namespace Start.Server.Data.Services {
 			this.db = dbContext;
 		}
 
-		public BookmarkGroup? GetBookmarkGroup(string userId, int bookmarkGroupId,
+		public async Task<BookmarkGroup?> GetBookmarkGroup(string userId, int bookmarkGroupId,
 			bool includeBookmarks = false) {
-			BookmarkGroup? group = db.BookmarkGroups
+			BookmarkGroup? group = await db.BookmarkGroups
 				.Where(bg => bg.BookmarkGroupId == bookmarkGroupId)
 				.If(includeBookmarks, q => q.Include(bg => bg.Bookmarks))
-				.SingleOrDefault();
+				.SingleOrDefaultAsync();
 
 			if (!BookmarkOwnershipTools.IsBookmarkGroupOwner(db, userId, bookmarkGroupId))
 				return null;
@@ -28,31 +27,31 @@ namespace Start.Server.Data.Services {
 			return group;
 		}
 
-		public IList<BookmarkGroup> GetUserBookmarkGroups(string userId,
+		public async Task<IList<BookmarkGroup>> GetUserBookmarkGroups(string userId,
 			bool includeBookmarkGroups = false) {
-			return this.db.BookmarkGroups
+			return await this.db.BookmarkGroups
 				.Where(bg => bg.BookmarkContainer!.ApplicationUserId == userId)
 				.If(includeBookmarkGroups, q => q.Include(bg => bg.Bookmarks))
-				.ToList();
+				.ToListAsync();
 		}
 
-		public BookmarkGroup? CreateBookmarkGroup(string userId, string title,
+		public async Task<BookmarkGroup?> CreateBookmarkGroup(string userId, string title,
 			string color, int bookmarkContainerId) {
 			if (!BookmarkOwnershipTools
 				.IsBookmarkContainerOwner(this.db, userId, bookmarkContainerId))
 				return null;
 
 			BookmarkGroup newBookmarkGroup = new(title, color, bookmarkContainerId);
-			this.db.BookmarkGroups.Add(newBookmarkGroup);
-			this.db.SaveChanges();
+			await this.db.BookmarkGroups.AddAsync(newBookmarkGroup);
+			await this.db.SaveChangesAsync();
 
 			return newBookmarkGroup;
 		}
 
-		public BookmarkGroup? UpdateBookmarkGroup(string userId,
+		public async Task<BookmarkGroup?> UpdateBookmarkGroup(string userId,
 			BookmarkGroup bookmarkGroup) {
-			BookmarkGroup? existingGroup = this.db.BookmarkGroups
-				.SingleOrDefault(bg => bg.BookmarkGroupId == bookmarkGroup.BookmarkGroupId);
+			BookmarkGroup? existingGroup = await this.db.BookmarkGroups
+				.SingleOrDefaultAsync(bg => bg.BookmarkGroupId == bookmarkGroup.BookmarkGroupId);
 
 			if (existingGroup == null)
 				return null;
@@ -66,14 +65,14 @@ namespace Start.Server.Data.Services {
 				return null;
 
 			this.db.Entry(bookmarkGroup).State = EntityState.Modified;
-			this.db.SaveChanges();
+			await this.db.SaveChangesAsync();
 
 			return bookmarkGroup;
 		}
 
-		public bool DeleteBookmarkGroup(string userId, int bookmarkGroupId) {
-			BookmarkGroup? bookmarkGroup = this.db.BookmarkGroups
-				.SingleOrDefault(bg => bg.BookmarkGroupId == bookmarkGroupId);
+		public async Task<bool> DeleteBookmarkGroup(string userId, int bookmarkGroupId) {
+			BookmarkGroup? bookmarkGroup = await this.db.BookmarkGroups
+				.SingleOrDefaultAsync(bg => bg.BookmarkGroupId == bookmarkGroupId);
 
 			if (bookmarkGroup == null)
 				return false;
@@ -82,7 +81,7 @@ namespace Start.Server.Data.Services {
 				return false;
 
 			this.db.BookmarkGroups.Remove(bookmarkGroup);
-			this.db.SaveChanges();
+			await this.db.SaveChangesAsync();
 
 			return true;
 		}

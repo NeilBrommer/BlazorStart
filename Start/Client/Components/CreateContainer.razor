@@ -1,6 +1,8 @@
 ﻿@using Start.Shared
-@using System.IO
-@inject HttpClient Http
+@using Start.Shared.Api
+@using Refit
+
+@inject IBookmarkContainersApi bookmarkContainersApi
 
 <Dialog Title="Create Container" Active="this.IsOpen" OnClose="this.OnDialogClose">
     <EditForm Model="this.model" OnValidSubmit="this.OnSubmit">
@@ -50,16 +52,10 @@
 
     protected async void OnSubmit()
     {
-        HttpResponseMessage response = await Http
-            .PostAsJsonAsync("BookmarkContainers/Create", model.Title);
+        ApiResponse<BookmarkContainerDto?> apiResponse = await bookmarkContainersApi
+            .CreateBookmarkContainer(model.Title);
 
-        Stream stream = response.RequestMessage!.Content!.ReadAsStream();
-        StreamReader reader = new StreamReader(stream);
-        Console.WriteLine(reader.ReadToEnd());
-
-        BookmarkContainerDto? container = await response
-            !.Content
-            !.ReadFromJsonAsync<BookmarkContainerDto>();
+        BookmarkContainerDto? container = apiResponse.Content;
 
         if (container == null)
         {

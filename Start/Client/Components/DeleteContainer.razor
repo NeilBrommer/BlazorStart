@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Start.Shared.Api
+
 @inject HttpClient Http
+@inject IBookmarkContainersApi bookmarkContainersApi
 
 @{ string title = $"Delete Container \"{this.ContainerTitle}\""; }
 
@@ -41,8 +44,8 @@
     {
         try
         {
-            HttpResponseMessage result = await Http
-                .DeleteAsync($"BookmarkContainers/Delete/{this.BookmarkContainerId}");
+            HttpResponseMessage result = await bookmarkContainersApi
+                .DeleteBookmarkContainer(this.BookmarkContainerId);
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {

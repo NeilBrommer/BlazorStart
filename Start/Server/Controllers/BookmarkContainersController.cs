@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,9 @@ namespace Start.Server.Controllers {
 		[ProducesResponseType(StatusCodes.Status200OK,
 			Type = typeof(IEnumerable<BookmarkContainerDto>))]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public IActionResult GetAllBookmarkContainers() {
-			List<BookmarkContainerDto>? containers = this.bookmarkContainerService
-				.GetUserBookmarkContainers(this.GetAuthorizedUserId())
+		public async Task<IActionResult> GetAllBookmarkContainers() {
+			List<BookmarkContainerDto>? containers = (await this.bookmarkContainerService
+				.GetUserBookmarkContainers(this.GetAuthorizedUserId()))
 				.Select(bc => bc.MapToDto())
 				.ToList();
 
@@ -38,9 +39,9 @@ namespace Start.Server.Controllers {
 		[Route("{bookmarkContainerId}")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BookmarkContainerDto))]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public IActionResult GetBookmarkContainer(int bookmarkContainerId) {
-			BookmarkContainerDto? container = this.bookmarkContainerService
-				.GetBookmarkContainer(this.GetAuthorizedUserId(), bookmarkContainerId, true, true)
+		public async Task<IActionResult> GetBookmarkContainer(int bookmarkContainerId) {
+			BookmarkContainerDto? container = (await this.bookmarkContainerService
+				.GetBookmarkContainer(this.GetAuthorizedUserId(), bookmarkContainerId, true, true))
 				?.MapToDto();
 
 			if (container == null)
@@ -53,9 +54,9 @@ namespace Start.Server.Controllers {
 		[Route("Create")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BookmarkContainerDto))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public IActionResult CreateBookmarkContainer([FromBody] string title) {
-			BookmarkContainerDto? container = this.bookmarkContainerService
-				.CreateBookmarkContainer(this.GetAuthorizedUserId(), title)
+		public async Task<IActionResult> CreateBookmarkContainer([FromBody] string title) {
+			BookmarkContainerDto? container = (await this.bookmarkContainerService
+				.CreateBookmarkContainer(this.GetAuthorizedUserId(), title))
 				?.MapToDto();
 
 			if (container == null)
@@ -71,8 +72,8 @@ namespace Start.Server.Controllers {
 		[Route("Delete/{bookmarkContainerId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public IActionResult DeleteBookmarkContainer(int bookmarkContainerId) {
-			bool res = this.bookmarkContainerService
+		public async Task<IActionResult> DeleteBookmarkContainer(int bookmarkContainerId) {
+			bool res = await this.bookmarkContainerService
 				.DeleteBookmarkContainer(this.GetAuthorizedUserId(), bookmarkContainerId);
 
 			if (!res)

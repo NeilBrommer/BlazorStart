@@ -1,11 +1,16 @@
 ﻿@page "/Start"
-@using Microsoft.AspNetCore.Authorization
+@using System.Collections.Generic
+@using System.Linq
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Start.Client.Components
 @using Start.Shared
-@attribute [Authorize]
-@inject HttpClient Http
+@using Start.Shared.Api
+@using Refit
+
+@* Distiguish from Refit.Authorize *@
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IBookmarkContainersApi bookmarkContainersApi
 
 @if (bookmarkContainers == null)
 {
@@ -101,9 +106,10 @@ else
     {
         try
         {
-            this.bookmarkContainers = await Http
-                .GetFromJsonAsync<IList<BookmarkContainerDto>>(
-                    "BookmarkContainers");
+            ApiResponse<IEnumerable<BookmarkContainerDto>> response = await bookmarkContainersApi
+                .GetAllBookmarkContainers();
+
+            this.bookmarkContainers = response.Content?.ToList();
 
             if (this.bookmarkContainers == null || !this.bookmarkContainers.Any())
             {
@@ -120,13 +126,10 @@ else
 
     protected async Task CreateDefaultContainer()
     {
-        HttpResponseMessage response = await Http
-            .PostAsJsonAsync("BookmarkContainers/Create", "Default");
+        ApiResponse<BookmarkContainerDto?> response = await bookmarkContainersApi
+            .CreateBookmarkContainer("Default");
 
-        BookmarkContainerDto? container = await response
-            .RequestMessage
-            !.Content
-            !.ReadFromJsonAsync<BookmarkContainerDto?>();
+        BookmarkContainerDto? container = response.Content;
 
         if (container != null)
             await this.OnContainerSelected(container.BookmarkContainerId);
@@ -139,12 +142,13 @@ else
             if (!this.bookmarkContainers?.Any(bc => bc.BookmarkContainerId == bookmarkContainerId) ?? false)
                 bookmarkContainerId = this.bookmarkContainers?.First().BookmarkContainerId ?? bookmarkContainerId;
 
-            BookmarkContainerDto? bookmarkContainer = await Http
-                .GetFromJsonAsync<BookmarkContainerDto?>(
-                    $"BookmarkContainers/{bookmarkContainerId}");
+            ApiResponse<BookmarkContainerDto?> response = await bookmarkContainersApi
+                .GetBookmarkContainer(bookmarkContainerId);
+
+            BookmarkContainerDto? container = response.Content;
 
             await this.SetSelectedContainer(bookmarkContainerId);
-            this.selectedBookmarkContainer = bookmarkContainer;
+            this.selectedBookmarkContainer = container;
         }
         catch (AccessTokenNotAvailableException e)
         {
