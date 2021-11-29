@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 namespace Start.Shared {
 	public class BookmarkContainerDto {
 		public int BookmarkContainerId { get; set; }
+		[Required]
 		[StringLength(300)]
 		public string Title { get; set; }
 
