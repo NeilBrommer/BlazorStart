@@ -1,0 +1,35 @@
+﻿@using Start.Shared
+
+<div class="activeBookmarkContainer">
+    @if (this.Container == null)
+    {
+        <div class="empty">
+            <div class="empty-icon">
+                <div class="loading loading-icon"></div>
+            </div>
+            <p class="empty-title h5">Loading Bookmarks</p>
+        </div>
+        <p class="text-center">Loading Bookmarks</p>
+    }
+    else if (!this.Container.BookmarkGroups?.Any() ?? true)
+    {
+        <div class="empty">
+            <div class="empty-icon">
+                <i class="icon icon-3x icon-bookmark"></i>
+            </div>
+            <p class="empty-title h5">No Bookmark Groups</p>
+        </div>
+    }
+    else
+    {
+        foreach (BookmarkGroupDto group in this.Container.BookmarkGroups!)
+        {
+            <BookmarkGroup Group="group" />
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public BookmarkContainerDto? Container { get; set; }
+}

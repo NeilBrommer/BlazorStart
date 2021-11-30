@@ -47,34 +47,7 @@ else
         </li>
     </ul>
 
-    <div class="activeBookmarkContainer">
-        @if (this.selectedBookmarkContainer == null)
-        {
-            <div class="empty">
-                <div class="empty-icon">
-                    <div class="loading loading-icon"></div>
-                </div>
-                <p class="empty-title h5">Loading Bookmarks</p>
-            </div>
-            <p class="text-center">Loading Bookmarks</p>
-        }
-        else if (!this.selectedBookmarkContainer.BookmarkGroups?.Any() ?? true)
-        {
-            <div class="empty">
-                <div class="empty-icon">
-                    <i class="icon icon-3x icon-bookmark"></i>
-                </div>
-                <p class="empty-title h5">No Bookmark Groups</p>
-            </div>
-        }
-        else
-        {
-            @foreach (BookmarkGroupDto group in this.selectedBookmarkContainer.BookmarkGroups!)
-            {
-                <BookmarkGroup Group="group" />
-            }
-        }
-    </div>
+    <BookmarkContainer Container="this.selectedBookmarkContainer" />
 
     <CreateContainer IsOpen="showCreateContainerForm" OnClose="this.OnCloseCreateContainer"
                      OnCreated="this.OnContainerCreated" />
