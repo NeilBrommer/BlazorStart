@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Blazored.LocalStorage;
 using Refit;
 using Start.Shared.Api;
+using Fluxor;
 
 namespace Start.Client {
 	public class Program {
@@ -39,6 +40,13 @@ namespace Start.Client {
 
 			builder.Services.AddApiAuthorization();
 			builder.Services.AddBlazoredLocalStorage();
+
+			builder.Services.AddFluxor(opt => {
+				opt.ScanAssemblies(typeof(Program).Assembly);
+#if DEBUG
+				opt.UseReduxDevTools();
+#endif
+			});
 
 			await builder.Build().RunAsync();
 		}

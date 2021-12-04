@@ -1,18 +1,30 @@
 ﻿@page "/"
-@using System.Collections.Generic
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
 @using System.Linq
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Start.Client.Components
-@using Start.Shared
-@using Start.Shared.Api
-@using Refit
+@using Start.Client.Store.State
+@using Start.Client.Store.Features.ContainersList
+@using Start.Client.Store.Features.CurrentContainer
+@using Start.Client.Store.Features.CreateContainer
+@using Start.Client.Store.Features.DeleteContainer
+@using Fluxor
 
 @* Distinguish from Refit.Authorize *@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
-@inject IBookmarkContainersApi bookmarkContainersApi
 
-@if (bookmarkContainers == null)
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IState<RootState> state
+@inject IDispatcher dispatch
+
+@if (this.state.Value.ContainerListState.ErrorMessage != null) {
+    <Alert Type="Alert.AlertType.Error">
+        <b>Error</b> @this.state.Value.ContainerListState.ErrorMessage
+    </Alert>
+}
+
+@if (this.state.Value.ContainerListState.IsLoadingContainersList)
 {
     <div class="empty">
         <div class="empty-icon">
@@ -24,10 +36,10 @@
 else
 {
     <ul class="containerList tab">
-        @foreach (BookmarkContainerDto container in this.bookmarkContainers)
+        @foreach (BookmarkContainerDto container in this.state.Value.ContainerListState.Containers)
         {
             string itemClasses = "tab-item";
-            if (container.BookmarkContainerId == this.selectedBookmarkContainer?.BookmarkContainerId)
+            if (container.BookmarkContainerId == this.state.Value.CurrentContainerState.Container?.BookmarkContainerId)
                 itemClasses += " active";
 
             <li class="@itemClasses">
@@ -47,132 +59,41 @@ else
         </li>
     </ul>
 
-    <BookmarkContainer Container="this.selectedBookmarkContainer" />
+    <BookmarkContainer Container="this.state.Value.CurrentContainerState.Container" />
 
-    <CreateContainer IsOpen="showCreateContainerForm" OnClose="this.OnCloseCreateContainer"
-                     OnCreated="this.OnContainerCreated" />
-    <DeleteContainer Active="this.showDeleteContainerForm" OnClose="this.OnCloseDeleteContainer"
-                     BookmarkContainerId="this.bookmarkContainerToDelete?.BookmarkContainerId ?? 0"
-                     ContainerTitle="@(this.bookmarkContainerToDelete?.Title ?? "")"
-                     OnDeleted="this.OnContainerDeleted" />
+    <CreateContainer />
+    <DeleteContainer />
 }
 
 @code
 {
-    private IList<BookmarkContainerDto>? bookmarkContainers;
-    private BookmarkContainerDto? selectedBookmarkContainer;
-
-    private bool showCreateContainerForm = false;
-
-    private bool showDeleteContainerForm = false;
-    private BookmarkContainerDto? bookmarkContainerToDelete;
-
-    private bool showCreateGroupForm = false;
-    private bool showCreateBookmarkForm = false;
-
     protected override async Task OnInitializedAsync()
     {
-        await LoadContainers();
+        this.dispatch.Dispatch(new LoadContainerListAction());
+        this.dispatch.Dispatch(new LoadCurrentContainerAction(await this.GetSelectedContainerId()));
     }
 
-    protected async Task LoadContainers()
+    protected void OnContainerSelected(int bookmarkContainerId)
     {
-        try
-        {
-            ApiResponse<IEnumerable<BookmarkContainerDto>> response = await bookmarkContainersApi
-                .GetAllBookmarkContainers();
-
-            this.bookmarkContainers = response.Content?.ToList();
-
-            if (this.bookmarkContainers == null || !this.bookmarkContainers.Any())
-            {
-                await this.CreateDefaultContainer();
-            }
-
-            await this.OnContainerSelected(await this.GetSelectedContainerId());
-        }
-        catch (AccessTokenNotAvailableException e)
-        {
-            e.Redirect();
-        }
-    }
-
-    protected async Task CreateDefaultContainer()
-    {
-        ApiResponse<BookmarkContainerDto?> response = await bookmarkContainersApi
-            .CreateBookmarkContainer("Default");
-
-        BookmarkContainerDto? container = response.Content;
-
-        if (container != null)
-            await this.OnContainerSelected(container.BookmarkContainerId);
-    }
-
-    protected async Task OnContainerSelected(int bookmarkContainerId)
-    {
-        try
-        {
-            if (!this.bookmarkContainers?.Any(bc => bc.BookmarkContainerId == bookmarkContainerId) ?? false)
-                bookmarkContainerId = this.bookmarkContainers?.First().BookmarkContainerId ?? bookmarkContainerId;
-
-            ApiResponse<BookmarkContainerDto?> response = await bookmarkContainersApi
-                .GetBookmarkContainer(bookmarkContainerId);
-
-            BookmarkContainerDto? container = response.Content;
-
-            await this.SetSelectedContainer(bookmarkContainerId);
-            this.selectedBookmarkContainer = container;
-        }
-        catch (AccessTokenNotAvailableException e)
-        {
-            e.Redirect();
-        }
+        dispatch.Dispatch(new LoadCurrentContainerAction(bookmarkContainerId));
     }
 
     protected void OnDeleteContainerClicked(int bookmarkContainerId)
     {
-        this.bookmarkContainerToDelete = this.bookmarkContainers
-            ?.First(bc => bc.BookmarkContainerId == bookmarkContainerId);
-        this.showDeleteContainerForm = true;
+        BookmarkContainerDto? bookmarkContainerToDelete = this.state.Value.ContainerListState
+            .Containers
+            ?.FirstOrDefault(bc => bc.BookmarkContainerId == bookmarkContainerId);
+
+        if (bookmarkContainerToDelete == null)
+            return;
+
+        this.dispatch.Dispatch(new ShowDeleteContainerFormAction(
+            bookmarkContainerToDelete.BookmarkContainerId, bookmarkContainerToDelete.Title));
     }
 
     protected void OnCreateContainerClicked()
     {
-        this.showCreateContainerForm = true;
-    }
-
-    protected void OnCloseCreateContainer()
-    {
-        this.showCreateContainerForm = false;
-    }
-
-    protected async Task OnContainerCreated(BookmarkContainerDto newContainer)
-    {
-        if (this.bookmarkContainers == null)
-            return;
-
-        this.bookmarkContainers.Add(newContainer);
-        this.showCreateContainerForm = false;
-        await OnContainerSelected(newContainer.BookmarkContainerId);
-    }
-
-    protected void OnCloseDeleteContainer()
-    {
-        this.showDeleteContainerForm = false;
-    }
-
-    protected async Task OnContainerDeleted(int bookmarkContainerId)
-    {
-        if (!this.bookmarkContainers?.Any(bc => bc.BookmarkContainerId != bookmarkContainerId) ?? false)
-            await this.CreateDefaultContainer();
-
-        if (await this.GetSelectedContainerId() == bookmarkContainerId)
-            await this.OnContainerSelected(
-                this.bookmarkContainers?.First().BookmarkContainerId ?? bookmarkContainerId);
-
-        this.bookmarkContainers = this.bookmarkContainers
-            ?.Where(bc => bc.BookmarkContainerId != bookmarkContainerId)
-            .ToList();
+        dispatch.Dispatch(new ShowCreateContainerFormAction());
     }
 
     // Save the currently selected container in LocalStorage so that the same container remains
@@ -186,7 +107,8 @@ else
             return await localStorage.GetItemAsync<int>("SelectedContainer");
 
         // Default to the first container
-        int firstContainer = this.bookmarkContainers!.First().BookmarkContainerId;
+        int firstContainer = this.state.Value.ContainerListState.Containers
+            .First().BookmarkContainerId;
         await this.SetSelectedContainer(firstContainer);
         return firstContainer;
     }

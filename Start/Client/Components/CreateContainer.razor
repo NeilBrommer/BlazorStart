@@ -1,15 +1,17 @@
-﻿@using Start.Shared
-@using Start.Shared.Api
-@using Refit
+﻿@using Start.Client.Store.Features.CreateContainer
+@using Fluxor
 
-@inject IBookmarkContainersApi bookmarkContainersApi
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-<Dialog Title="Create Container" Active="this.IsOpen" OnClose="this.OnDialogClose">
-    <EditForm Model="this.model" OnValidSubmit="this.OnSubmit">
-        @if (displayError)
+@inject IDispatcher dispatch
+@inject IState<CreateContainerState> state
+
+<Dialog Title="Create Container" Active="this.state.Value.ShowCreateContainerForm" OnClose="this.OnDialogClose">
+    <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
+        @if (this.state.Value.CreateContainerErrorMessage != null)
         {
             <Alert Type="Alert.AlertType.Error">
-                There was an error creating the container
+                @this.state.Value.CreateContainerErrorMessage
             </Alert>
         }
         <div class="form-group">
@@ -19,7 +21,7 @@
                         <div>
                             <label for="createBookmarkContainerTitle" class="form-label">Title</label>
                             <InputText id="createBookmarkContainerTitle" name="createBookmarkContainerTitle"
-                                       class="form-input" @bind-Value="this.model.Title" />
+                                       class="form-input" @bind-Value="this.Model.Title" />
                         </div>
                     </div>
                 </div>
@@ -28,9 +30,18 @@
                 <div class="columns">
                     <div class="column col-12 text-right">
                         <div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="icon icon-plus"></i> Create
-                            </button>
+                            @if (this.state.Value.IsLoadingCreateContainer)
+                            {
+                                <button type="submit" disabled class="btn btn-primary loading">
+                                    <i class="icon icon-plus"></i> Create
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon icon-plus"></i> Create
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -42,34 +53,16 @@
 @code {
     [Parameter]
     public EventCallback<BookmarkContainerDto> OnCreated { get; set; }
-    [Parameter]
-    public bool IsOpen { get; set; }
-    [Parameter]
-    public EventCallback OnClose { get; set; }
 
-    private BookmarkContainerDto model = new("");
-    private bool displayError = false;
+    private BookmarkContainerDto Model { get; set; } = new BookmarkContainerDto("");
 
-    protected async void OnSubmit()
+    protected void OnSubmit()
     {
-        ApiResponse<BookmarkContainerDto?> apiResponse = await bookmarkContainersApi
-            .CreateBookmarkContainer(model.Title);
-
-        BookmarkContainerDto? container = apiResponse.Content;
-
-        if (container == null)
-        {
-            this.displayError = true;
-        }
-        else
-        {
-            await this.OnCreated.InvokeAsync(container);
-        }
+        dispatch.Dispatch(new SubmitCreateContainerAction(this.Model));
     }
 
-    protected async void OnDialogClose()
+    protected void OnDialogClose()
     {
-        this.IsOpen = false;
-        await this.OnClose.InvokeAsync();
+        dispatch.Dispatch(new HideCreateContainerFormAction());
     }
 }

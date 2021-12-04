@@ -1,66 +1,48 @@
-﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using Start.Shared.Api
+﻿@using Start.Client.Store.Features.DeleteContainer
+@using Fluxor
 
-@inject HttpClient Http
-@inject IBookmarkContainersApi bookmarkContainersApi
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-@{ string title = $"Delete Container \"{this.ContainerTitle}\""; }
+@inject IDispatcher dispatch
+@inject IState<DeleteContainerState> state
 
-<Dialog Title="@title" Active="this.Active">
-    @if (this.ShowAlert)
+@{ string title = $"Delete Container \"{this.state.Value.BookmarkContainerTitleToDelete}\""; }
+
+<Dialog Title="@title" Active="this.state.Value.ShowDeleteContainerForm" OnClose="this.OnDialogClose">
+    @if (this.state.Value.DeleteContainerErrorMessage != null)
     {
-        <div class="toast toast-error">
-            There was an error deleting the bookmark container
-        </div>
+        <Alert Type="Alert.AlertType.Error">
+            @this.state.Value.DeleteContainerErrorMessage
+        </Alert>
     }
-    <p>Are you sure you want to delete the bookmark container "@this.ContainerTitle"?</p>
+
+    <p>
+        Are you sure you want to delete the bookmark container
+        "@this.state.Value.BookmarkContainerTitleToDelete"?
+    </p>
     <div class="text-right">
-        <button class="btn" @onclick="this.OnDialogClose">Cancel</button>
-        <button class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+        @if (!this.state.Value.IsLoadingDeleteContainer)
+        {
+            <button type="button" class="btn" @onclick="this.OnDialogClose">Cancel</button>
+            <button type="submit" class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+        }
+        else
+        {
+            <button type="button" disabled class="btn" @onclick="this.OnDialogClose">Cancel</button>
+            <button type="submit" disabled class="btn btn-error loading" @onclick="this.OnConfirmDelete">Delete</button>
+        }
     </div>
 </Dialog>
 
 @code {
-    [Parameter]
-    public int BookmarkContainerId { get; set; }
-    [Parameter]
-    public string ContainerTitle { get; set; } = null!;
-    [Parameter]
-    public bool Active { get; set; }
-    [Parameter]
-    public EventCallback<int> OnDeleted { get; set; }
-    [Parameter]
-    public EventCallback OnClose { get; set; }
-
-    public bool ShowAlert { get; set; } = false;
-
-    public async Task OnDialogClose()
+    public void OnDialogClose()
     {
-        this.Active = false;
-        await this.OnClose.InvokeAsync();
+        this.dispatch.Dispatch(new HideDeleteContainerFormAction());
     }
 
-    public async Task OnConfirmDelete()
+    public void OnConfirmDelete()
     {
-        try
-        {
-            HttpResponseMessage result = await bookmarkContainersApi
-                .DeleteBookmarkContainer(this.BookmarkContainerId);
-
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                await this.OnDeleted.InvokeAsync(BookmarkContainerId);
-                this.ShowAlert = false;
-                this.Active = false;
-            }
-            else
-            {
-                this.ShowAlert = true;
-            }
-        }
-        catch (AccessTokenNotAvailableException e)
-        {
-            e.Redirect();
-        }
+        this.dispatch.Dispatch(new SubmitDeleteContainerAction(
+            this.state.Value.BookmarkContainerIdToDelete));
     }
 }
