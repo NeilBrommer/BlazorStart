@@ -1,0 +1,20 @@
+﻿<li>
+    @if (!String.IsNullOrEmpty(this.Model.Notes))
+    {
+        <details>
+            <summary>
+                <a href="@this.Model.Url" class="bookmarkLink">@this.Model.Title</a>
+            </summary>
+            @this.Model.Notes
+        </details>
+    }
+    else
+    {
+        <a href="@this.Model.Url" class="bookmarkLink">@this.Model.Title</a>
+    }
+</li>
+
+@code {
+    [Parameter]
+    public BookmarkDto Model { get; set; } = null!;
+}

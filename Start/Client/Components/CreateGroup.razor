@@ -1,0 +1,82 @@
+﻿@using Start.Client.Store.Features.CreateGroup
+@using Fluxor
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IActionSubscriber actionSubscriber
+@inject IDispatcher dispatch
+@inject IState<CreateGroupState> state
+
+<Dialog Title="Create Bookmark Group" Active="this.state.Value.ShowCreateGroupForm" OnClose="this.OnDialogClose">
+    <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
+        <DataAnnotationsValidator />
+
+        @if (this.state.Value.CreateGroupErrorMessage != null)
+        {
+            <Alert Type="Alert.AlertType.Error">
+                @this.state.Value.CreateGroupErrorMessage
+            </Alert>
+        }
+
+        <ValidationSummary />
+
+        <div class="form-group">
+            <div class="container">
+                <div class="columns">
+                    <div class="column col-10">
+                        <label for="createBookmarkGroupTitle">Title</label>
+                        <InputText id="createBookmarkGroupTitle" name="createBookmarkGroupTitle"
+                                   class="form-input" @bind-Value="this.Model.Title" />
+                    </div>
+                    <div class="column col-2">
+                        <label for="createBookmarkGroupColor">Color</label>
+                        <input type="color" name="createBookmarkGroupColor" @bind="this.Model.Color" />
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="columns">
+                    <div class="column col-12 text-right">
+                        @if (this.state.Value.IsLoadingCreateGroup)
+                        {
+                            <button type="submit" disabled class="btn btn-primary loading">
+                                <i class="icon icon-plus"></i> Create
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary">
+                                <i class="icon icon-plus"></i> Create
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+</Dialog>
+
+@code {
+    private BookmarkGroupDto Model { get; set; } = new("", "", 0);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        this.Model = new BookmarkGroupDto("", "", state.Value.ContainerId);
+
+        // Keep the model's container ID up to date
+        actionSubscriber.SubscribeToAction<ShowCreateGroupFormAction>(this,
+            (a) => this.Model.BookmarkContainerId = a.ContainerId);
+    }
+
+    protected void OnSubmit()
+    {
+        dispatch.Dispatch(new SubmitCreateGroupAction(this.Model));
+    }
+
+    protected void OnDialogClose()
+    {
+        dispatch.Dispatch(new HideCreateGroupFormAction());
+    }
+}

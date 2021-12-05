@@ -1,5 +1,21 @@
-﻿<div class="activeBookmarkContainer">
-    @if (this.Container == null)
+﻿@using Start.Client.Store.State
+@using Start.Client.Store.Features.CreateGroup
+@using Fluxor
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher dispatch
+@inject IState<RootState> state
+
+<div class="activeBookmarkContainer">
+    @if (this.state.Value.CurrentContainerState.ErrorMessage != null)
+    {
+        <Alert Type="Alert.AlertType.Error">
+            @this.state.Value.CurrentContainerState.ErrorMessage
+        </Alert>
+    }
+
+    @if (this.state.Value.CurrentContainerState.IsLoadingCurrentContainer)
     {
         <div class="empty">
             <div class="empty-icon">
@@ -7,27 +23,60 @@
             </div>
             <p class="empty-title h5">Loading Bookmarks</p>
         </div>
-        <p class="text-center">Loading Bookmarks</p>
     }
-    else if (!this.Container.BookmarkGroups?.Any() ?? true)
+    else if (this.state.Value.CurrentContainerState.Container == null)
+    {
+        <div class="empty">
+            <div class="empty-icon">
+                <i class="icon icon-3x icon-bookmark"></i>
+            </div>
+            <p class="empty-title h5">Failed To Load Container</p>
+        </div>
+    }
+    else if (this.state.Value.CurrentContainerState.Container.BookmarkGroups == null
+        || (!(this.state.Value.CurrentContainerState.Container.BookmarkGroups?.Any()) ?? true))
     {
         <div class="empty">
             <div class="empty-icon">
                 <i class="icon icon-3x icon-bookmark"></i>
             </div>
             <p class="empty-title h5">No Bookmark Groups</p>
+            <div class="empty-action">
+                <button class="btn btn-primary" @onclick="this.ShowCreateGroupForm">
+                    <i class="icon icon-plus"></i> Create Group
+                </button>
+            </div>
         </div>
     }
     else
     {
-        foreach (BookmarkGroupDto group in this.Container.BookmarkGroups!)
-        {
-            <BookmarkGroup Group="group" />
-        }
+        <div id="bookmarkGroups">
+            @* The compiler doesn't pick up that null has already been checked for,
+                so the ! is needed *@
+            @foreach (BookmarkGroupDto group in this.state.Value.CurrentContainerState.Container.BookmarkGroups!)
+            {
+                <BookmarkGroup Group="group" />
+            }
+
+            <div class="addBookmarkGroupButton text-center">
+                <button type="button" class="btn tooltip tooltip-bottom"
+                        @onclick="this.ShowCreateGroupForm"
+                        aria-label="Create Group" data-tooltip="Create Group">
+                    <i class="icon icon-plus"></i>
+                </button>
+            </div>
+        </div>
     }
 </div>
 
 @code {
-    [Parameter]
-    public BookmarkContainerDto? Container { get; set; }
+    public void ShowCreateGroupForm()
+    {
+        if (this.state.Value.CurrentContainerState.Container == null)
+            return;
+
+        dispatch.Dispatch(new ShowCreateGroupFormAction(
+            this.state.Value.CurrentContainerState.Container.BookmarkContainerId,
+            this.state.Value.CurrentContainerState.Container.Title));
+    }
 }

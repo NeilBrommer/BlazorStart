@@ -34,6 +34,10 @@ namespace Start.Client {
 				})
 				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
+			builder.Services.AddRefitClient<IBookmarkGroupsApi>()
+				.ConfigureHttpClient(c => { c.BaseAddress = new Uri(baseUri, "BookmarkGroups"); })
+				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+
 			builder.Services.AddRefitClient<IBookmarksApi>()
 				.ConfigureHttpClient(c => { c.BaseAddress = new Uri(baseUri, "Bookmarks"); })
 				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
@@ -44,6 +48,7 @@ namespace Start.Client {
 			builder.Services.AddFluxor(opt => {
 				opt.ScanAssemblies(typeof(Program).Assembly);
 #if DEBUG
+				Console.WriteLine("Enabling Redux dev tools");
 				opt.UseReduxDevTools();
 #endif
 			});

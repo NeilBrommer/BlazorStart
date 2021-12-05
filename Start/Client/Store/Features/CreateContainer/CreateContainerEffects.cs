@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Refit;
 using Start.Shared;
 using Start.Shared.Api;
-using Start.Client.Store.Features.CurrentContainer;
 using Start.Client.Store.Features.ContainersList;
 
 namespace Start.Client.Store.Features.CreateContainer {
 	public class CreateContainerEffects {
-		public IBookmarkContainersApi BookmarkContainersApi { get; set; }
+		public IBookmarkContainersApi BookmarkContainersApi { get; init; }
 
 		public CreateContainerEffects(IBookmarkContainersApi bookmarkContainersApi) {
 			this.BookmarkContainersApi = bookmarkContainersApi;
@@ -26,15 +25,14 @@ namespace Start.Client.Store.Features.CreateContainer {
 
 				BookmarkContainerDto? container = apiResponse.Content;
 
-				if (container == null)
+				if (container == null) {
 					dispatch.Dispatch(new ErrorFetchingCreateContainerAction(
 						"Failed to create container"));
-				else {
-					dispatch.Dispatch(new AddContainerToListAction(container));
-					dispatch.Dispatch(new ReceivedCreateContainerAction());
-					dispatch.Dispatch(new LoadCurrentContainerAction(
-						container.BookmarkContainerId));
+					return;
 				}
+
+				dispatch.Dispatch(new AddContainerToListAction(container));
+				dispatch.Dispatch(new ReceivedCreateContainerAction());
 			} catch (AccessTokenNotAvailableException e) {
 				e.Redirect();
 			}

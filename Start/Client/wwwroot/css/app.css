@@ -1,23 +1,4 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-html, body {
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-a, .btn-link {
-	color: #0366d6;
-}
-
-.btn-primary {
-	color: #fff;
-	background-color: #1b6ec2;
-	border-color: #1861ac;
-}
-
-.content {
-	padding-top: 1.1rem;
-}
-
+/* Validation */
 .valid.modified:not([type=checkbox]) {
 	outline: 1px solid #26b050;
 }
@@ -30,6 +11,8 @@ a, .btn-link {
 	color: red;
 }
 
+
+/* Blazor */
 #blazor-error-ui {
 	background: lightyellow;
 	bottom: 0;
@@ -49,14 +32,87 @@ a, .btn-link {
 		top: 0.5rem;
 	}
 
+
+/* Spectre's default is no padding */
 .container {
 	padding: 0.4rem;
 }
 
+/* The splash screen */
 .appLoadingContainer {
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+
+#bookmarkGroups {
+	margin-top: 1em;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1280px;
+	display: grid;
+	grid-column-gap: 1.25rem;
+	grid-row-gap: 1.25rem;
+}
+
+@media screen and (max-width: 960px) {
+	#bookmarkGroups {
+		grid-template-columns: repeat(1, 1fr);
+		padding: 1em;
+	}
+}
+
+@media screen and (min-width: 960px) {
+	#bookmarkGroups {
+		grid-template-columns: repeat(2, 1fr);
+		width: 70%;
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	#bookmarkGroups {
+		grid-template-columns: repeat(3, 1fr);
+		width: 70%;
+	}
+}
+
+.bookmarkGroup {
+	width: 100%;
+}
+
+.bookmarkGroup .card-header {
+	padding-top: 0;
+}
+
+.bookmarkGroup .card-title {
+	margin-top: 0.5em;
+}
+
+.bookmarkGroup .card-body {
+	padding: 0;
+}
+
+.bookmarkGroup .card-body:last-child {
+	padding: 0;
+}
+
+ul.bookmarks {
+	list-style: none;
+	margin: 0;
+}
+
+li.noBookmarksItem {
+	margin-top: 0;
+}
+
+.addBookmarkGroupButton button {
+	width: 100%;
+	margin-top: 0.5em;
+}
+
+button.addBookmarkButton {
+	float: right;
+	margin-top: 0.5em;
 }

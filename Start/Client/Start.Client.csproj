@@ -46,6 +46,7 @@
     <None Remove="Store\Features\DeleteContainer\" />
     <None Remove="Store\Features\ContainersList\" />
     <None Remove="Store\Features\CurrentContainer\" />
+    <None Remove="Store\Features\CreateGroup\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\Spectre\" />
@@ -58,5 +59,6 @@
     <Folder Include="Store\Features\DeleteContainer\" />
     <Folder Include="Store\Features\ContainersList\" />
     <Folder Include="Store\Features\CurrentContainer\" />
+    <Folder Include="Store\Features\CreateGroup\" />
   </ItemGroup>
 </Project>

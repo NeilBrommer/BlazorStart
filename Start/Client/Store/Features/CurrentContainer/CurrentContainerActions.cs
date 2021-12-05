@@ -28,4 +28,20 @@ namespace Start.Client.Store.Features.CurrentContainer {
 	}
 
 	public class FixCurrentContainerAction { }
+
+	public class AddBookmarkGroupAction {
+		public BookmarkGroupDto BookmarkGroup { get; init; }
+
+		public AddBookmarkGroupAction(BookmarkGroupDto bookmarkGroup) {
+			this.BookmarkGroup = bookmarkGroup;
+		}
+	}
+
+	public class RemoveBookmarkGroupAction {
+		public int BookmarkGroupId { get; init; }
+
+		public RemoveBookmarkGroupAction(int bookmarkGroupId) {
+			this.BookmarkGroupId = bookmarkGroupId;
+		}
+	}
 }

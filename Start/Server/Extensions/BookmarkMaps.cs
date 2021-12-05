@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Start.Server.Models;
 using Start.Shared;
 
@@ -12,7 +11,8 @@ namespace Start.Server.Extensions {
 
 		public static BookmarkGroupDto MapToDto(this BookmarkGroup bookmarkGroup) {
 			return new BookmarkGroupDto(bookmarkGroup.BookmarkGroupId, bookmarkGroup.Title,
-				bookmarkGroup.Color, bookmarkGroup.Bookmarks?.Select(b => b.MapToDto()).ToList());
+				bookmarkGroup.Color, bookmarkGroup.BookmarkContainerId,
+				bookmarkGroup.Bookmarks?.Select(b => b.MapToDto()).ToList());
 		}
 
 		public static BookmarkContainerDto MapToDto(this BookmarkContainer bookmarkContainer) {

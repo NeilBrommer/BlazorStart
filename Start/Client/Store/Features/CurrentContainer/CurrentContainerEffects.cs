@@ -9,6 +9,7 @@ using Start.Client.Store.State;
 using Start.Client.Store.Features.CreateContainer;
 using Start.Shared;
 using Start.Shared.Api;
+using System;
 
 namespace Start.Client.Store.Features.CurrentContainer {
 	public class CurrentContainerEffects {
@@ -35,10 +36,16 @@ namespace Start.Client.Store.Features.CurrentContainer {
 				BookmarkContainerDto? container = response.Content;
 
 				if (container == null) {
+					Console.WriteLine("Error fetching container " + action.BookmarkContainerId);
+					Console.WriteLine(response);
+
 					dispatch.Dispatch(new ErrorFetchingCurrentContainerAction(
 						"Failed to get current bookmark container"));
 					return;
 				}
+
+				Console.WriteLine("Recieved container " + action.BookmarkContainerId);
+				Console.WriteLine(response);
 
 				dispatch.Dispatch(new ReceivedCurrentContainerAction(container));
 

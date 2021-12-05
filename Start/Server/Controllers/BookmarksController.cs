@@ -11,12 +11,9 @@ namespace Start.Server.Controllers {
 	[ApiController]
 	[Route("[controller]")]
 	public class BookmarksController : ControllerBase {
-		private readonly IBookmarkGroupService bookmarkGroupService;
 		private readonly IBookmarkService bookmarkService;
 
-		public BookmarksController(IBookmarkGroupService bookmarkGroupService,
-			IBookmarkService bookmarkService) {
-			this.bookmarkGroupService = bookmarkGroupService;
+		public BookmarksController(IBookmarkService bookmarkService) {
 			this.bookmarkService = bookmarkService;
 		}
 

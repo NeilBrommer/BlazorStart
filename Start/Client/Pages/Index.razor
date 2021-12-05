@@ -5,7 +5,6 @@
 @using System.Linq
 @using Start.Client.Components
 @using Start.Client.Store.State
-@using Start.Client.Store.Features.ContainersList
 @using Start.Client.Store.Features.CurrentContainer
 @using Start.Client.Store.Features.CreateContainer
 @using Start.Client.Store.Features.DeleteContainer
@@ -52,27 +51,24 @@ else
             </li>
         }
         <li class="tab-item tab-action">
-            <button @onclick="OnCreateContainerClicked" class="btn btn-link"
-                    title="Create New Container" aria-label="Create New Container">
+            <button @onclick="OnCreateContainerClicked" class="btn btn-link tooltip tooltip-left"
+                    title="Create New Container" aria-label="Create New Container"
+                    data-tooltip="Create Container">
                 +
             </button>
         </li>
     </ul>
 
-    <BookmarkContainer Container="this.state.Value.CurrentContainerState.Container" />
+    <BookmarkContainer />
 
     <CreateContainer />
     <DeleteContainer />
+
+    <CreateGroup />
 }
 
 @code
 {
-    protected override async Task OnInitializedAsync()
-    {
-        this.dispatch.Dispatch(new LoadContainerListAction());
-        this.dispatch.Dispatch(new LoadCurrentContainerAction(await this.GetSelectedContainerId()));
-    }
-
     protected void OnContainerSelected(int bookmarkContainerId)
     {
         dispatch.Dispatch(new LoadCurrentContainerAction(bookmarkContainerId));
@@ -94,27 +90,5 @@ else
     protected void OnCreateContainerClicked()
     {
         dispatch.Dispatch(new ShowCreateContainerFormAction());
-    }
-
-    // Save the currently selected container in LocalStorage so that the same container remains
-    // selected between new tabs
-
-    protected async Task<int> GetSelectedContainerId()
-    {
-        bool hasValue = await localStorage.ContainKeyAsync("SelectedContainer");
-
-        if (hasValue)
-            return await localStorage.GetItemAsync<int>("SelectedContainer");
-
-        // Default to the first container
-        int firstContainer = this.state.Value.ContainerListState.Containers
-            .First().BookmarkContainerId;
-        await this.SetSelectedContainer(firstContainer);
-        return firstContainer;
-    }
-
-    protected async Task SetSelectedContainer(int selectedContainerId)
-    {
-        await localStorage.SetItemAsync<int>("SelectedContainer", selectedContainerId);
     }
 }
