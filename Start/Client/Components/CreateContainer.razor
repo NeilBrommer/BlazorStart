@@ -8,12 +8,16 @@
 
 <Dialog Title="Create Container" Active="this.state.Value.ShowCreateContainerForm" OnClose="this.OnDialogClose">
     <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
+        <DataAnnotationsValidator />
+
         @if (this.state.Value.CreateContainerErrorMessage != null)
         {
             <Alert Type="Alert.AlertType.Error">
                 @this.state.Value.CreateContainerErrorMessage
             </Alert>
         }
+
+        <ValidationSummary />
 
         <div class="form-group">
             <div class="container">
