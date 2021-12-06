@@ -1,6 +1,10 @@
-﻿<div class="card bookmarkGroup">
+﻿@using System.Drawing
+
+<div class="card bookmarkGroup">
     <div class="card-header" style="background-color: @this.Group.Color">
-        <h2 class="card-title h5 d-inline-block">@this.Group.Title</h2>
+        <h2 class="card-title h5 d-inline-block @this.ForegroundTitleColorClass">
+            @this.Group.Title
+        </h2>
         <button type="button" class="addBookmarkButton btn btn-sm tooltip tooltip-left"
                 aria-label="Create Bookmark" data-tooltip="Create Bookmark">
             <i class="icon icon-plus"></i>
@@ -39,6 +43,19 @@
 {
     [Parameter]
     public BookmarkGroupDto Group { get; set; } = null!;
+
+    protected string ForegroundTitleColorClass {
+        get {
+            const int threshold = 105;
+            Color bgColor = ColorTranslator.FromHtml(this.Group.Color);
+
+            double val = Math.Floor((bgColor.R * .299) + (bgColor.G * 0.587) + (bgColor.B * 0.114));
+
+            if ((255 - val) < threshold)
+                return "text-dark";
+            return "text-light";
+        }
+    }
 
     protected void OnCreateBookmarkClicked()
     {
