@@ -53,35 +53,35 @@
 	flex-direction: column;
 }
 
-#sidebar #sidebarHeading {
-	padding: 0.5rem 1.5rem;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-}
+	#sidebar #sidebarHeading {
+		padding: 0.5rem 1.5rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
 
-#sidebar #sidebarHeading h1 {
-	margin: 0;
-}
+		#sidebar #sidebarHeading h1 {
+			margin: 0;
+		}
 
-#sidebar .nav {
-	padding: 0.5rem 1.5rem;
-}
+	#sidebar .nav {
+		padding: 0.5rem 1.5rem;
+	}
 
-#sidebar #sidebarItems {
-	flex: 1; /* Fill remaining space */
-	overflow-y: auto;
-}
+	#sidebar #sidebarItems {
+		flex: 1; /* Fill remaining space */
+		overflow-y: auto;
+	}
 
-#sidebar .accountActions {
-	border-top: solid 1px #dadee4;
-}
+	#sidebar .accountActions {
+		border-top: solid 1px #dadee4;
+	}
 
-#sidebar .accountActions .accountName {
-	font-weight: bold;
-	margin-bottom: 1em;
-}
+		#sidebar .accountActions .accountName {
+			font-weight: bold;
+			margin-bottom: 1em;
+		}
 
 .off-canvas .off-canvas-content {
 	padding: 0;
@@ -97,19 +97,19 @@
 	align-items: center;
 }
 
-#containerTabStrip #menuButton {
-	flex: 0 0 auto;
-	margin-right: 1em;
-	margin-left: 1em;
-}
+	#containerTabStrip #menuButton {
+		flex: 0 0 auto;
+		margin-right: 1em;
+		margin-left: 1em;
+	}
 
-#containerTabStrip .containerList {
-	flex: 1 0 0;
-}
+	#containerTabStrip .containerList {
+		flex: 1 0 0;
+	}
 
-#containerTabStrip .containerList .tab-item a {
-	padding: .6rem .4rem .6rem .4rem;
-}
+		#containerTabStrip .containerList .tab-item a {
+			padding: .6rem .4rem .6rem .4rem;
+		}
 
 #bookmarkGroups {
 	margin-top: 1em;
@@ -146,21 +146,21 @@
 	width: 100%;
 }
 
-.bookmarkGroup .card-header {
-	padding-top: 0;
-}
+	.bookmarkGroup .card-header {
+		padding-top: 0;
+	}
 
-.bookmarkGroup .card-title {
-	margin-top: 0.5em;
-}
+	.bookmarkGroup .card-title {
+		margin-top: 0.5em;
+	}
 
-.bookmarkGroup .card-body {
-	padding: 0;
-}
+	.bookmarkGroup .card-body {
+		padding: 0;
+	}
 
-.bookmarkGroup .card-body:last-child {
-	padding: 0;
-}
+		.bookmarkGroup .card-body:last-child {
+			padding: 0;
+		}
 
 ul.bookmarks {
 	list-style: none;
