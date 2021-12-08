@@ -87,8 +87,8 @@
 	padding: 0;
 }
 
-#menubutton .icon {
-	transform: scale(1.5);
+#menuButton .icon {
+	transform: scale(1.2);
 }
 
 #containerTabStrip {
@@ -100,10 +100,15 @@
 #containerTabStrip #menuButton {
 	flex: 0 0 auto;
 	margin-right: 1em;
+	margin-left: 1em;
 }
 
 #containerTabStrip .containerList {
 	flex: 1 0 0;
+}
+
+#containerTabStrip .containerList .tab-item a {
+	padding: .6rem .4rem .6rem .4rem;
 }
 
 #bookmarkGroups {
@@ -126,14 +131,14 @@
 @media screen and (min-width: 960px) {
 	#bookmarkGroups {
 		grid-template-columns: repeat(2, 1fr);
-		width: 70%;
+		width: 60%;
 	}
 }
 
 @media screen and (min-width: 1440) {
 	#bookmarkGroups {
 		grid-template-columns: repeat(3, 1fr);
-		width: 70%;
+		width: 60%;
 	}
 }
 
