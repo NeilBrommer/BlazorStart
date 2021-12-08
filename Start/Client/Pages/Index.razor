@@ -8,6 +8,7 @@
 @using Start.Client.Store.Features.CurrentContainer
 @using Start.Client.Store.Features.CreateContainer
 @using Start.Client.Store.Features.DeleteContainer
+@using Start.Client.Store.Features.Sidebar
 @using Fluxor
 
 @* Distinguish from Refit.Authorize *@
@@ -17,7 +18,8 @@
 @inject IState<RootState> state
 @inject IDispatcher dispatch
 
-@if (this.state.Value.ContainerListState.ErrorMessage != null) {
+@if (this.state.Value.ContainerListState.ErrorMessage != null)
+{
     <Alert Type="Alert.AlertType.Error">
         <b>Error</b> @this.state.Value.ContainerListState.ErrorMessage
     </Alert>
@@ -34,41 +36,60 @@
 }
 else
 {
-    <ul class="containerList tab">
-        @foreach (BookmarkContainerDto container in this.state.Value.ContainerListState.Containers)
-        {
-            string itemClasses = "tab-item";
-            if (container.BookmarkContainerId == this.state.Value.CurrentContainerState.Container?.BookmarkContainerId)
-                itemClasses += " active";
+    <Sidebar>
 
-            <li class="@itemClasses">
-                <a @onclick="() => OnContainerSelected(container.BookmarkContainerId)">
-                    @container.Title
-                    <button class="btn btn-clear"
-                            @onclick="() => this.OnDeleteContainerClicked(container.BookmarkContainerId)">
-                    </button>
-                </a>
-            </li>
-        }
-        <li class="tab-item tab-action">
-            <button @onclick="OnCreateContainerClicked" class="btn btn-link tooltip tooltip-left"
-                    title="Create New Container" aria-label="Create New Container"
-                    data-tooltip="Create Container">
-                +
+        <div id="containerTabStrip">
+            <button id="menuButton" class="btn btn-link" @onclick="this.ShowSidebar">
+                <i class="icon icon-menu"></i>
             </button>
-        </li>
-    </ul>
+            <ul class="containerList tab">
+                @foreach (BookmarkContainerDto container in this.state.Value.ContainerListState.Containers)
+                {
+                    string itemClasses = "tab-item";
+                    if (container.BookmarkContainerId == this.state.Value.CurrentContainerState.Container?.BookmarkContainerId)
+                        itemClasses += " active";
 
-    <BookmarkContainer />
+                    <li class="@itemClasses">
+                        <a @onclick="() => OnContainerSelected(container.BookmarkContainerId)">
+                            @container.Title
+                            @if (this.state.Value.EditMode)
+                            {
+                                <button class="btn btn-clear"
+                                        @onclick="() => this.OnDeleteContainerClicked(container.BookmarkContainerId)">
+                                </button>
+                            }
+                        </a>
+                    </li>
+                }
+                @if (this.state.Value.EditMode)
+                {
+                    <li class="tab-item tab-action">
+                        <button @onclick="OnCreateContainerClicked" class="btn btn-link tooltip tooltip-left"
+                                title="Create New Container" aria-label="Create New Container"
+                                data-tooltip="Create Container">
+                            +
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
 
-    <CreateContainer />
-    <DeleteContainer />
+        <BookmarkContainer />
 
-    <CreateGroup />
+        <CreateContainer />
+        <DeleteContainer />
+
+        <CreateGroup />
+    </Sidebar>
 }
 
 @code
 {
+    protected void ShowSidebar()
+    {
+        dispatch.Dispatch(new ShowSidebarAction());
+    }
+
     protected void OnContainerSelected(int bookmarkContainerId)
     {
         dispatch.Dispatch(new LoadCurrentContainerAction(bookmarkContainerId));

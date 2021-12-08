@@ -8,6 +8,9 @@ namespace Start.Client.Store.State {
 		public ContainerListState ContainerListState { get; init; }
 		public CurrentContainerState CurrentContainerState { get; init; }
 
+		public bool ShowSidebar { get; init; }
+		public bool EditMode { get; init; }
+
 		public RootState() {
 			this.ContainerListState = new ContainerListState();
 			this.CurrentContainerState = new CurrentContainerState();

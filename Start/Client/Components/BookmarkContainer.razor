@@ -58,13 +58,16 @@
                 <BookmarkGroup Group="group" />
             }
 
-            <div class="addBookmarkGroupButton text-center">
-                <button type="button" class="btn tooltip tooltip-bottom"
-                        @onclick="this.ShowCreateGroupForm"
-                        aria-label="Create Group" data-tooltip="Create Group">
-                    <i class="icon icon-plus"></i>
-                </button>
-            </div>
+            @if (this.state.Value.EditMode)
+            {
+                <div class="addBookmarkGroupButton text-center">
+                    <button type="button" class="btn tooltip tooltip-bottom"
+                            @onclick="this.ShowCreateGroupForm"
+                            aria-label="Create Group" data-tooltip="Create Group">
+                        <i class="icon icon-plus"></i>
+                    </button>
+                </div>
+            }
         </div>
     }
 </div>

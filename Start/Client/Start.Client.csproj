@@ -47,6 +47,7 @@
     <None Remove="Store\Features\ContainersList\" />
     <None Remove="Store\Features\CurrentContainer\" />
     <None Remove="Store\Features\CreateGroup\" />
+    <None Remove="Store\Features\Sidebar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\Spectre\" />
@@ -60,5 +61,6 @@
     <Folder Include="Store\Features\ContainersList\" />
     <Folder Include="Store\Features\CurrentContainer\" />
     <Folder Include="Store\Features\CreateGroup\" />
+    <Folder Include="Store\Features\Sidebar\" />
   </ItemGroup>
 </Project>

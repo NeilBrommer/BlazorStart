@@ -1,0 +1,87 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Start.Client.Store.Features.Sidebar
+@using Start.Client.Store.State
+@using Fluxor
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<RootState> state
+@inject IDispatcher dispatch
+
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<div class="off-canvas">
+    @* No off-canvas-toggle - add something that dispatches ShowSidebarAction *@
+
+    <div id="sidebar" class="off-canvas-sidebar @(this.state.Value.ShowSidebar ? "active" : "")">
+        <div id="sidebarHeading">
+            <h1>Start</h1>
+            <button class="btn btn-link" @onclick="this.OnSidebarHideClicked">
+                <i class="icon icon-cross icon-2x"></i>
+            </button>
+        </div>
+
+        <ul id="sidebarItems" class="nav">
+            <li class="nav-item">
+                <div class="form-group">
+                    <label class="form-switch">
+                        <input type="checkbox" @onclick="this.OnToggleEditMode" />
+                        <i class="form-icon"></i>
+                        Edit Mode
+                    </label>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="nav accountActions">
+            <AuthorizeView>
+                <Authorized>
+                    <li class="nav-item accountName">
+                        <figure class="avatar">
+                            <i class="icon icon-people ml-2 mt-2"></i>
+                        </figure>
+                            @context.User.Identity?.Name
+                    </li>
+                    <li class="nav-item">
+                        <a href="authentication/profile">Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+                    </li>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="authentication/login">Log in</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </ul>
+    </div>
+
+    <a class="off-canvas-overlay" @onclick="this.OnSidebarHideClicked"></a>
+
+    <div class="off-canvas-content">
+        @this.ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    protected void OnSidebarHideClicked()
+    {
+        dispatch.Dispatch(new HideSidebarAction());
+    }
+
+    protected void OnToggleEditMode()
+    {
+        dispatch.Dispatch(new ToggleEditModeAction());
+    }
+
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+}

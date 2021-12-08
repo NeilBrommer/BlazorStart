@@ -1,14 +1,17 @@
 ﻿@using System.Drawing
+@using Fluxor
+@using Start.Client.Store.State
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<RootState> state
+@inject IDispatcher dispatch
 
 <div class="card bookmarkGroup">
     <div class="card-header" style="background-color: @this.Group.Color">
-        <h2 class="card-title h5 d-inline-block @this.ForegroundTitleColorClass">
+        <h2 class="card-title h6 d-inline-block @this.ForegroundTitleColorClass">
             @this.Group.Title
         </h2>
-        <button type="button" class="addBookmarkButton btn btn-sm tooltip tooltip-left"
-                aria-label="Create Bookmark" data-tooltip="Create Bookmark">
-            <i class="icon icon-plus"></i>
-        </button>
     </div>
     <div class="card-body">
         <ul class="bookmarks">
@@ -34,6 +37,16 @@
                 {
                     <Bookmark Model="bookmark" />
                 }
+
+                @if (this.state.Value.EditMode)
+                {
+                    <li class="addBookmarkItem">
+                        <button type="button" class="addBookmarkButton btn">
+                            <i class="icon icon-plus"></i>
+                            Create Bookmark
+                        </button>
+                    </li>
+                }
             }
         </ul>
     </div>
@@ -44,8 +57,10 @@
     [Parameter]
     public BookmarkGroupDto Group { get; set; } = null!;
 
-    protected string ForegroundTitleColorClass {
-        get {
+    protected string ForegroundTitleColorClass
+    {
+        get
+        {
             const int threshold = 105;
             Color bgColor = ColorTranslator.FromHtml(this.Group.Color);
 

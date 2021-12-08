@@ -47,6 +47,65 @@
 	align-items: center;
 }
 
+
+#sidebar {
+	display: flex;
+	flex-direction: column;
+}
+
+#sidebar #sidebarHeading {
+	padding: 0.5rem 1.5rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#sidebar #sidebarHeading h1 {
+	margin: 0;
+}
+
+#sidebar .nav {
+	padding: 0.5rem 1.5rem;
+}
+
+#sidebar #sidebarItems {
+	flex: 1; /* Fill remaining space */
+	overflow-y: auto;
+}
+
+#sidebar .accountActions {
+	border-top: solid 1px #dadee4;
+}
+
+#sidebar .accountActions .accountName {
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+
+.off-canvas .off-canvas-content {
+	padding: 0;
+}
+
+#menubutton .icon {
+	transform: scale(1.5);
+}
+
+#containerTabStrip {
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+#containerTabStrip #menuButton {
+	flex: 0 0 auto;
+	margin-right: 1em;
+}
+
+#containerTabStrip .containerList {
+	flex: 1 0 0;
+}
+
 #bookmarkGroups {
 	margin-top: 1em;
 	margin-left: auto;
@@ -71,7 +130,7 @@
 	}
 }
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1440) {
 	#bookmarkGroups {
 		grid-template-columns: repeat(3, 1fr);
 		width: 70%;
@@ -113,6 +172,5 @@ li.noBookmarksItem {
 }
 
 button.addBookmarkButton {
-	float: right;
-	margin-top: 0.5em;
+	width: 100%;
 }
