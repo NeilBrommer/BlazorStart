@@ -7,9 +7,78 @@
     <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass ${ProjectDir}/Sass/Spectre/spectre.scss ${ProjectDir}/wwwroot/css/spectre/spectre.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass ${ProjectDir}/Sass/Spectre/spectre-exp.scss ${ProjectDir}/wwwroot/css/spectre/spectre-exp.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass ${ProjectDir}/Sass/Spectre/spectre-icons.scss ${ProjectDir}/wwwroot/css/spectre/spectre-icons.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass ${ProjectDir}/Sass/app.scss ${ProjectDir}/wwwroot/css/app.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass --style=compressed ${ProjectDir}/Sass/Spectre/spectre.scss ${ProjectDir}/wwwroot/css/spectre/spectre.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass --style=compressed ${ProjectDir}/Sass/Spectre/spectre-exp.scss ${ProjectDir}/wwwroot/css/spectre/spectre-exp.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass --style=compressed ${ProjectDir}/Sass/Spectre/spectre-icons.scss ${ProjectDir}/wwwroot/css/spectre/spectre-icons.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass --style=compressed ${ProjectDir}/Sass/app.scss ${ProjectDir}/wwwroot/css/app.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Start' ">
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
+  <Target Name="DeleteBuiltCss" AfterTargets="Clean">
+      <Message Text="Deleting built CSS files" />
+
+      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre.css" />
+      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre.css.map" />
+
+      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-exp.css" />
+      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-exp.css.map" />
+
+      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-icons.css" />
+      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-icons.css.map" />
+
+      <Delete Files="$(ProjectDir)/wwwroot/css/app.css" />
+      <Delete Files="$(ProjectDir)/wwwroot/css/app.css.map" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.11" PrivateAssets="all" />
@@ -48,6 +117,8 @@
     <None Remove="Store\Features\CurrentContainer\" />
     <None Remove="Store\Features\CreateGroup\" />
     <None Remove="Store\Features\Sidebar\" />
+    <None Remove="Sass\" />
+    <None Remove="Sass\Spectre\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\Spectre\" />
@@ -62,5 +133,7 @@
     <Folder Include="Store\Features\CurrentContainer\" />
     <Folder Include="Store\Features\CreateGroup\" />
     <Folder Include="Store\Features\Sidebar\" />
+    <Folder Include="Sass\" />
+    <Folder Include="Sass\Spectre\" />
   </ItemGroup>
 </Project>

@@ -12,26 +12,29 @@ This is a rewrite of my [New Tab Page project](https://github.com/NeilBrommer/Ne
 ## To Do
 
 - [x] Backend data services
-- [ ] API Controllers
-	- [ ] Bookmark containers
-	- [ ] Bookmark groups
-	- [ ] Bookmarks
+- [x] API Controllers
+	- [x] Bookmark containers
+	- [x] Bookmark groups
+	- [x] Bookmarks
 - [ ] Manage bookmark containers
 	- [x] Create
 	- [x] Delete
 	- [ ] Edit
 - [ ] Manage bookmark groups
-	- [ ] Create
-	- [ ] Delete
+	- [x] Create
+	- [x] Delete
 	- [ ] Edit
 - [ ] Manage bookmarks
 	- [ ] Create
 	- [ ] Delete
 	- [ ] Edit
-- [ ] Use [Refit](https://github.com/reactiveui/refit) for strongly typed API calls
+- [x] Use [Refit](https://github.com/reactiveui/refit) for strongly typed API calls
 - [ ] Support choosing between storing data on the server or in IndexedDB
 
 ## Dependancies
 
+- [Dart SASS](https://sass-lang.com/) for compiling SCSS files
 - [Spectre.css](https://picturepan2.github.io/spectre/)
 - [Blazored LocalStorage](https://github.com/blazored/LocalStorage)
+- [Refit](https://github.com/reactiveui/refit/)
+- [Fluxor](https://github.com/mrpmorris/Fluxor/)

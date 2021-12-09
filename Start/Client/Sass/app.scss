@@ -1,0 +1,188 @@
+﻿/* Validation */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+
+/* Blazor */
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+
+/* Spectre's default is no padding */
+.container {
+    padding: 0.4rem;
+}
+
+/* The splash screen */
+.appLoadingContainer {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar #sidebarHeading {
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#sidebar #sidebarHeading h1 {
+    margin: 0;
+}
+
+#sidebar .nav {
+    padding: 0.5rem 1.5rem;
+}
+
+#sidebar #sidebarItems {
+    flex: 1; /* Fill remaining space */
+    overflow-y: auto;
+}
+
+#sidebar .accountActions {
+    border-top: solid 1px #dadee4;
+}
+
+#sidebar .accountActions .accountName {
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.off-canvas .off-canvas-content {
+    padding: 0;
+}
+
+#menuButton .icon {
+    transform: scale(1.2);
+}
+
+#containerTabStrip {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#containerTabStrip #menuButton {
+    flex: 0 0 auto;
+    margin-right: 1em;
+    margin-left: 1em;
+}
+
+#containerTabStrip .containerList {
+    flex: 1 0 0;
+}
+
+#containerTabStrip .containerList .tab-item a {
+    padding: .6rem .4rem .6rem .4rem;
+}
+
+#bookmarkGroups {
+    margin-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1280px;
+    display: grid;
+    grid-column-gap: 1.25rem;
+    grid-row-gap: 1.25rem;
+}
+
+@media screen and (max-width: 960px) {
+    #bookmarkGroups {
+        grid-template-columns: repeat(1, 1fr);
+        padding: 1em;
+    }
+}
+
+@media screen and (min-width: 960px) {
+    #bookmarkGroups {
+        grid-template-columns: repeat(2, 1fr);
+        width: 60%;
+    }
+}
+
+@media screen and (min-width: 1440) {
+    #bookmarkGroups {
+        grid-template-columns: repeat(3, 1fr);
+        width: 60%;
+    }
+}
+
+.bookmarkGroup {
+    width: 100%;
+}
+
+.bookmarkGroup .card-header {
+    padding-top: 0;
+}
+
+.bookmarkGroup .card-title {
+    margin-top: 0.5em;
+}
+
+.bookmarkGroup .card-body {
+    padding: 0;
+}
+
+.bookmarkGroup .card-body:last-child {
+    padding: 0;
+}
+
+ul.bookmarks {
+    list-style: none;
+    margin: 0;
+}
+
+li.noBookmarksItem {
+    margin-top: 0;
+}
+
+.addBookmarkGroupButton button {
+    width: 100%;
+    margin-top: 0.5em;
+}
+
+button.addBookmarkButton {
+    width: 100%;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        color: #fafafa;
+        background-color: #111111;
+    }
+}

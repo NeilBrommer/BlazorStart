@@ -1,5 +1,7 @@
 # Project specific
 Start/Server/app.db
+# Compiled CSS files
+Start/Client/wwwRoot/css/
 
 # globs
 Makefile.in
