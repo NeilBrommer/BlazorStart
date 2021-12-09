@@ -23,13 +23,13 @@
     position: fixed;
     width: 100%;
     z-index: 1000;
-}
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
+    .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
 }
 
 
@@ -59,36 +59,36 @@
 #sidebar {
     display: flex;
     flex-direction: column;
-}
 
-#sidebar #sidebarHeading {
-    padding: 0.5rem 1.5rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
+    #sidebarHeading {
+        padding: 0.5rem 1.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
 
-#sidebar #sidebarHeading h1 {
-    margin: 0;
-}
+        h1 {
+            margin: 0;
+        }
+    }
 
-#sidebar .nav {
-    padding: 0.5rem 1.5rem;
-}
+    .nav {
+        padding: 0.5rem 1.5rem;
+    }
 
-#sidebar #sidebarItems {
-    flex: 1; /* Fill remaining space */
-    overflow-y: auto;
-}
+    #sidebarItems {
+        flex: 1; /* Fill remaining space */
+        overflow-y: auto;
+    }
 
-#sidebar .accountActions {
-    border-top: solid 1px #dadee4;
-}
+    .accountActions {
+        border-top: solid 1px #dadee4;
 
-#sidebar .accountActions .accountName {
-    font-weight: bold;
-    margin-bottom: 1em;
+        .accountName {
+            font-weight: bold;
+            margin-bottom: 1em;
+        }
+    }
 }
 
 .off-canvas .off-canvas-content {
@@ -103,20 +103,24 @@
     width: 100%;
     display: flex;
     align-items: center;
-}
 
-#containerTabStrip #menuButton {
-    flex: 0 0 auto;
-    margin-right: 1em;
-    margin-left: 1em;
-}
+    #menuButton {
+        flex: 0 0 auto;
+        margin-right: 1em;
+        margin-left: 1em;
 
-#containerTabStrip .containerList {
-    flex: 1 0 0;
-}
+        .icon {
+            transform: scale(1.2);
+        }
+    }
 
-#containerTabStrip .containerList .tab-item a {
-    padding: .6rem .4rem .6rem .4rem;
+    .containerList {
+        flex: 1 0 0;
+
+        .tab-item a {
+            padding: .6rem .4rem .6rem .4rem;
+        }
+    }
 }
 
 #bookmarkGroups {
@@ -127,24 +131,18 @@
     display: grid;
     grid-column-gap: 1.25rem;
     grid-row-gap: 1.25rem;
-}
 
-@media screen and (max-width: 960px) {
-    #bookmarkGroups {
+    @media screen and (max-width: 960px) {
         grid-template-columns: repeat(1, 1fr);
         padding: 1em;
     }
-}
 
-@media screen and (min-width: 960px) {
-    #bookmarkGroups {
+    @media screen and (min-width: 960px) {
         grid-template-columns: repeat(2, 1fr);
         width: 60%;
     }
-}
 
-@media screen and (min-width: 1440) {
-    #bookmarkGroups {
+    @media screen and (min-width: 1440) {
         grid-template-columns: repeat(3, 1fr);
         width: 60%;
     }
@@ -152,31 +150,31 @@
 
 .bookmarkGroup {
     width: 100%;
-}
 
-.bookmarkGroup .card-header {
-    padding-top: 0;
-}
+    .card-header {
+        padding-top: 0;
+    }
 
-.bookmarkGroup .card-title {
-    margin-top: 0.5em;
-}
+    .card-title {
+        margin-top: 0.5em;
+    }
 
-.bookmarkGroup .card-body {
-    padding: 0;
-}
+    .card-body {
+        padding: 0;
+    }
 
-.bookmarkGroup .card-body:last-child {
-    padding: 0;
+    .card-body:last-child {
+        padding: 0;
+    }
 }
 
 ul.bookmarks {
     list-style: none;
     margin: 0;
-}
 
-li.noBookmarksItem {
-    margin-top: 0;
+    li.noBookmarksItem {
+        margin-top: 0;
+    }
 }
 
 .addBookmarkGroupButton button {
