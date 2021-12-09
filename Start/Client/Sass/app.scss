@@ -47,6 +47,14 @@
     align-items: center;
 }
 
+.authorizingContainer {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 
 #sidebar {
     display: flex;

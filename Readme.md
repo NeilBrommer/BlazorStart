@@ -18,7 +18,7 @@ This is a rewrite of my [New Tab Page project](https://github.com/NeilBrommer/Ne
 	- [x] Bookmarks
 - [ ] Manage bookmark containers
 	- [x] Create
-	- [x] Delete
+	- [ ] Delete
 	- [ ] Edit
 - [ ] Manage bookmark groups
 	- [x] Create
@@ -30,6 +30,8 @@ This is a rewrite of my [New Tab Page project](https://github.com/NeilBrommer/Ne
 	- [ ] Edit
 - [x] Use [Refit](https://github.com/reactiveui/refit) for strongly typed API calls
 - [ ] Support choosing between storing data on the server or in IndexedDB
+- [ ] Look into speeding up authorization on page load
+	- https://github.com/dotnet/aspnetcore/issues/31926
 
 ## Dependancies
 
