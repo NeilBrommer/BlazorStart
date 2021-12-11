@@ -1,6 +1,7 @@
 ﻿@using System.Drawing
 @using Fluxor
 @using Start.Client.Store.State
+@using Start.Client.Store.Features.DeleteGroup
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
@@ -12,6 +13,14 @@
         <h2 class="card-title h6 d-inline-block @this.ForegroundTitleColorClass">
             @this.Group.Title
         </h2>
+
+        @if (this.state.Value.EditMode)
+        {
+            <button class="btn btn-error tooltip tooltip-left float-right"
+                    data-tooltip="Delete Group" @onclick="this.OnDeleteGroupClicked">
+                <i class="icon icon-delete"></i>
+            </button>
+        }
     </div>
     <div class="card-body">
         <ul class="bookmarks">
@@ -70,6 +79,12 @@
                 return "text-dark";
             return "text-light";
         }
+    }
+
+    protected void OnDeleteGroupClicked()
+    {
+        dispatch.Dispatch(new ShowDeleteGroupFormAction(
+            this.Group.BookmarkGroupId, this.Group.Title));
     }
 
     protected void OnCreateBookmarkClicked()

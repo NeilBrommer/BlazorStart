@@ -1,0 +1,46 @@
+﻿@using Start.Client.Store.Features.DeleteGroup
+@using Fluxor
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher dispatch
+@inject IState<DeleteGroupState> state
+
+@{ string title = $"Delete Group \"{this.state.Value.BookmarkGroupTitleToDelete}\""; }
+
+<Dialog Title="@title" Active="this.state.Value.ShowDeleteGroupForm" OnClose="this.OnDialogClose">
+    @if (this.state.Value.DeleteGroupErrorMessage != null)
+    {
+        <Alert Type="Alert.AlertType.Error">
+            @this.state.Value.DeleteGroupErrorMessage
+        </Alert>
+    }
+
+    <p>
+        Are you sure you want to delete the bookmark container
+        "@this.state.Value.BookmarkGroupTitleToDelete"?
+    </p>
+    <div class="text-right">
+        @if (!this.state.Value.IsLoadingDeleteGroup)
+        {
+            <button type="button" class="btn" @onclick="this.OnDialogClose">Cancel</button>
+            <button type="submit" class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+        }
+        else
+        {
+            <button type="button" disabled class="btn" @onclick="this.OnDialogClose">Cancel</button>
+            <button type="submit" disabled class="btn btn-error loading" @onclick="this.OnConfirmDelete">Delete</button>
+        }
+    </div>
+</Dialog>
+
+@code {
+    public void OnDialogClose() {
+        this.dispatch.Dispatch(new HideDeleteGroupFormAction());
+    }
+
+    public void OnConfirmDelete() {
+        this.dispatch.Dispatch(new SubmitDeleteGroupFormAction(
+            this.state.Value.BookmarkGroupIdToDelete));
+    }
+}

@@ -170,6 +170,9 @@
 
 	.card-title {
 		margin-top: 0.5em;
+		font-weight: bold;
+		// Keep the delete button from increasing the height of the header
+		line-height: 1.25;
 	}
 
 	.card-body {

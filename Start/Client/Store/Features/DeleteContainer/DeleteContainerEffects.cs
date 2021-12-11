@@ -4,18 +4,14 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Start.Client.Store.Features.CurrentContainer;
 using Start.Shared.Api;
 using System.Net;
-using Start.Client.Store.State;
 using Start.Client.Store.Features.ContainersList;
 
 namespace Start.Client.Store.Features.DeleteContainer {
 	public class DeleteContainerEffects {
 		public IBookmarkContainersApi BookmarkContainersApi { get; init; }
-		public IState<RootState> RootState { get; set; }
 
-		public DeleteContainerEffects(IBookmarkContainersApi bookmarkContainersApi,
-			IState<RootState> rootState) {
+		public DeleteContainerEffects(IBookmarkContainersApi bookmarkContainersApi) {
 			this.BookmarkContainersApi = bookmarkContainersApi;
-			this.RootState = rootState;
 		}
 
 		[EffectMethod]

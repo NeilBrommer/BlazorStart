@@ -129,6 +129,7 @@
     <None Remove="Store\Features\Sidebar\" />
     <None Remove="Sass\" />
     <None Remove="Sass\Spectre\" />
+    <None Remove="Store\Features\DeleteGroup\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\Spectre\" />
@@ -145,5 +146,6 @@
     <Folder Include="Store\Features\Sidebar\" />
     <Folder Include="Sass\" />
     <Folder Include="Sass\Spectre\" />
+    <Folder Include="Store\Features\DeleteGroup\" />
   </ItemGroup>
 </Project>

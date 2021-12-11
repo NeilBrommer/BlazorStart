@@ -18,7 +18,7 @@ This is a rewrite of my [New Tab Page project](https://github.com/NeilBrommer/Ne
 	- [x] Bookmarks
 - [ ] Manage bookmark containers
 	- [x] Create
-	- [ ] Delete
+	- [x] Delete
 	- [ ] Edit
 - [ ] Manage bookmark groups
 	- [x] Create
