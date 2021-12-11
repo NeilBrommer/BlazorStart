@@ -1,0 +1,127 @@
+﻿@import "./spectre/_variables";
+
+$dark-primary-color: $primary-color-light;
+$dark-primary-color-dark: $primary-color;
+$dark-text-color: $light-color;
+$dark-bg-color: $dark-color;
+$dark-bg-color-dark: darken($dark-color, 3%);
+$dark-border-color: darken($dark-color, 10%);
+
+@media screen and (prefers-color-scheme: dark) {
+	// Base
+	body {
+		color: $dark-text-color;
+		background-color: $dark-color;
+	}
+
+	a {
+		color: $primary-color-light;
+
+		&:focus,
+		&:hover,
+		&:active,
+		&.active {
+			color: $primary-color;
+		}
+
+		&:visited {
+			color: $link-color-dark;
+		}
+	}
+
+	// Buttons
+	.btn {
+		color: $dark-primary-color;
+		background-color: $dark-bg-color;
+
+		&:hover {
+			background-color: $dark-bg-color-dark;
+		}
+
+		&.btn-link {
+			color: $dark-primary-color;
+
+			&:hover {
+				color: $dark-primary-color-dark;
+			}
+		}
+	}
+
+	// Off canvas
+	.off-canvas {
+		.off-canvas-sidebar {
+			color: $dark-text-color;
+			background-color: $dark-bg-color-dark;
+			box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
+		}
+
+		.off-canvas-overlay {
+			background: rgba($dark-color, .2);
+		}
+	}
+
+
+	// Tabs
+	.tab {
+		border-bottom-color: $dark-border-color;
+
+		.tab-item.active {
+			color: $dark-primary-color;
+		}
+	}
+
+
+	// Cards
+	.card {
+		border-color: $dark-border-color;
+	}
+
+
+	// Empty
+	.empty {
+		color: $dark-text-color;
+		background: $dark-bg-color-dark;
+	}
+
+
+	// Modals
+	.modal-container {
+		color: $dark-text-color;
+		background-color: $dark-bg-color;
+		box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.1);
+
+		.modal-header {
+			color: $dark-text-color;
+		}
+	}
+
+	.modal {
+		&:target, &.active {
+			.modal-overlay {
+				background: rgba($dark-bg-color, .75);
+			}
+		}
+	}
+
+
+	// Forms
+	.form-input {
+		background-color: $dark-bg-color;
+
+		&:focus {
+			border-color: $dark-primary-color;
+		}
+	}
+
+	.form-select {
+		&:not([multiple]):not([size]) {
+			background-color: $dark-bg-color;
+		}
+	}
+
+
+	// Custom
+	#sidebar .accountActions {
+		border-top-color: $dark-border-color;
+	}
+}

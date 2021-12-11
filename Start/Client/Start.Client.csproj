@@ -30,6 +30,11 @@
           <command>sass ${ProjectDir}/Sass/app.scss ${ProjectDir}/wwwroot/css/app.css</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass ${ProjectDir}/Sass/dark-mode.scss ${ProjectDir}/wwwroot/css/dark-mode.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -54,6 +59,11 @@
         <Command>
           <type>BeforeBuild</type>
           <command>sass --style=compressed ${ProjectDir}/Sass/app.scss ${ProjectDir}/wwwroot/css/app.css</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+        <Command>
+          <type>BeforeBuild</type>
+          <command>sass --style=compressed ${ProjectDir}/Sass/dark-mode.scss ${ProjectDir}/wwwroot/css/dark-mode.css</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
       </CustomCommands>

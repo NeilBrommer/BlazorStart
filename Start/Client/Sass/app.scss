@@ -1,194 +1,204 @@
-﻿/* Validation */
+﻿@import "./spectre/_variables";
+@import "./spectre/mixins/_shadow";
+
+/* Validation */
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+	outline: 1px solid #26b050;
 }
 
 .invalid {
-    outline: 1px solid red;
+	background: lighten($error-color, 53%);
+	border-color: $error-color;
+
+	&:focus {
+		@include control-shadow($error-color);
+	}
 }
 
 .validation-message {
-    color: red;
+	color: $error-color;
 }
 
 
 /* Blazor */
 #blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
+	background: lightyellow;
+	bottom: 0;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+	display: none;
+	left: 0;
+	padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
 
-    .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+	.dismiss {
+		cursor: pointer;
+		position: absolute;
+		right: 0.75rem;
+		top: 0.5rem;
+	}
 }
 
 
 /* Spectre's default is no padding */
 .container {
-    padding: 0.4rem;
+	padding: 0.4rem;
 }
 
 /* The splash screen */
 .appLoadingContainer {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .authorizingContainer {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 
 #sidebar {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-    #sidebarHeading {
-        padding: 0.5rem 1.5rem;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
+	#sidebarHeading {
+		padding: 0.5rem 1.5rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
 
-        h1 {
-            margin: 0;
-        }
-    }
+		h1 {
+			margin: 0;
+		}
+	}
 
-    .nav {
-        padding: 0.5rem 1.5rem;
-    }
+	.nav {
+		padding: 0.5rem 1.5rem;
+	}
 
-    #sidebarItems {
-        flex: 1; /* Fill remaining space */
-        overflow-y: auto;
-    }
+	#sidebarItems {
+		flex: 1; /* Fill remaining space */
+		overflow-y: auto;
+	}
 
-    .accountActions {
-        border-top: solid 1px #dadee4;
+	.accountActions {
+		border-top: solid 1px #dadee4;
 
-        .accountName {
-            font-weight: bold;
-            margin-bottom: 1em;
-        }
-    }
+		.accountName {
+			font-weight: bold;
+			margin-bottom: 1em;
+		}
+	}
 }
 
 .off-canvas .off-canvas-content {
-    padding: 0;
+	padding: 0;
 }
 
 #menuButton .icon {
-    transform: scale(1.2);
+	transform: scale(1.2);
 }
 
 #containerTabStrip {
-    width: 100%;
-    display: flex;
-    align-items: center;
+	width: 100%;
+	display: flex;
+	align-items: center;
 
-    #menuButton {
-        flex: 0 0 auto;
-        margin-right: 1em;
-        margin-left: 1em;
+	#menuButton {
+		flex: 0 0 auto;
+		margin-right: 1em;
+		margin-left: 1em;
 
-        .icon {
-            transform: scale(1.2);
-        }
-    }
+		.icon {
+			transform: scale(1.2);
+		}
+	}
 
-    .containerList {
-        flex: 1 0 0;
+	.containerList {
+		flex: 1 0 0;
 
-        .tab-item a {
-            padding: .6rem .4rem .6rem .4rem;
-        }
-    }
+		.tab-item a {
+			padding: .6rem .4rem .6rem .4rem;
+			cursor: pointer;
+		}
+	}
 }
 
 #bookmarkGroups {
-    margin-top: 1em;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1280px;
-    display: grid;
-    grid-column-gap: 1.25rem;
-    grid-row-gap: 1.25rem;
+	margin-top: 1em;
+	margin-bottom: 3em;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1440px;
+	display: grid;
+	grid-column-gap: 1.25rem;
+	grid-row-gap: 1.25rem;
 
-    @media screen and (max-width: 960px) {
-        grid-template-columns: repeat(1, 1fr);
-        padding: 1em;
-    }
+	@media screen and (max-width: 960px) {
+		grid-template-columns: repeat(1, 1fr);
+		padding: 1em;
+	}
 
-    @media screen and (min-width: 960px) {
-        grid-template-columns: repeat(2, 1fr);
-        width: 60%;
-    }
+	@media screen and (min-width: 960px) {
+		grid-template-columns: repeat(2, 1fr);
+		width: 60%;
+	}
 
-    @media screen and (min-width: 1440) {
-        grid-template-columns: repeat(3, 1fr);
-        width: 60%;
-    }
+	@media screen and (min-width: 1440) {
+		grid-template-columns: repeat(3, 1fr);
+		width: 60%;
+	}
 }
 
 .bookmarkGroup {
-    width: 100%;
+	width: 100%;
+	border-radius: 0.5em;
+	box-shadow: 0 0.1rem 0.3rem rgba(48, 55, 66, 0.1);
 
-    .card-header {
-        padding-top: 0;
-    }
+	.card-header {
+		padding-top: 0;
+		border-radius: 0.4em 0.4em 0 0;
+	}
 
-    .card-title {
-        margin-top: 0.5em;
-    }
+	.card-title {
+		margin-top: 0.5em;
+	}
 
-    .card-body {
-        padding: 0;
-    }
+	.card-body {
+		padding: 0;
 
-    .card-body:last-child {
-        padding: 0;
-    }
+		.empty {
+			border-radius: 0 0 0.4em 0.4em;
+		}
+	}
+
+	.card-body:last-child {
+		padding: 0;
+	}
 }
 
 ul.bookmarks {
-    list-style: none;
-    margin: 0;
+	list-style: none;
+	margin: 0;
 
-    li.noBookmarksItem {
-        margin-top: 0;
-    }
+	li.noBookmarksItem {
+		margin-top: 0;
+	}
 }
 
 .addBookmarkGroupButton button {
-    width: 100%;
-    margin-top: 0.5em;
+	width: 100%;
+	margin-top: 0.5em;
 }
 
 button.addBookmarkButton {
-    width: 100%;
-}
-
-@media screen and (prefers-color-scheme: dark) {
-    body {
-        color: #fafafa;
-        background-color: #111111;
-    }
+	width: 100%;
 }
