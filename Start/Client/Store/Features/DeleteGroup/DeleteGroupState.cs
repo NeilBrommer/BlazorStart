@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Start.Client.Store.State;
+
 namespace Start.Client.Store.Features.DeleteGroup {
-	public record DeleteGroupState {
+	public record DeleteGroupState : RootState {
 		public bool ShowDeleteGroupForm { get; init; }
 		public int BookmarkGroupIdToDelete { get; init; }
 		public string BookmarkGroupTitleToDelete { get; init; }

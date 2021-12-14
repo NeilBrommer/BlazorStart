@@ -6,7 +6,7 @@ namespace Start.Server.Extensions {
 	public static class BookmarkMaps {
 		public static BookmarkDto MapToDto(this Bookmark bookmark) {
 			return new BookmarkDto(bookmark.BookmarkId, bookmark.Title, bookmark.Url,
-				bookmark.Notes);
+				bookmark.Notes, bookmark.BookmarkGroupId);
 		}
 
 		public static BookmarkGroupDto MapToDto(this BookmarkGroup bookmarkGroup) {

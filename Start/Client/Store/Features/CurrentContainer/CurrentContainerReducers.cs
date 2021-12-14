@@ -78,5 +78,56 @@ namespace Start.Client.Store.Features.CurrentContainer {
 				}
 			};
 		}
+
+		[ReducerMethod]
+		public static RootState AddBookmark(RootState state, AddBookmarkAction action) {
+			BookmarkContainerDto? container = state.CurrentContainerState.Container;
+
+			if (container == null)
+				return state;
+
+			List<BookmarkGroupDto>? groups = container.BookmarkGroups
+				?.Select(bg => {
+					if (bg.BookmarkGroupId == action.Bookmark.BookmarkGroupId) {
+						return new BookmarkGroupDto(bg.BookmarkGroupId, bg.Title, bg.Color,
+							bg.BookmarkContainerId,
+							bg.Bookmarks?
+								.Concat(new List<BookmarkDto> { action.Bookmark })
+								.ToList());
+					}
+
+					return bg;
+				})
+				.ToList();
+
+			return state with {
+				CurrentContainerState = state.CurrentContainerState with {
+					Container = new BookmarkContainerDto(container.BookmarkContainerId,
+						container.Title, groups)
+				}
+			};
+		}
+
+		[ReducerMethod]
+		public static RootState RemoveBookmark(RootState state, RemoveBookmarkAction action) {
+			BookmarkContainerDto? container = state.CurrentContainerState.Container;
+
+			if (container == null)
+				return state;
+
+			List<BookmarkGroupDto>? groups = container.BookmarkGroups
+				?.Select(bg => new BookmarkGroupDto(bg.BookmarkGroupId, bg.Title, bg.Color,
+					bg.BookmarkContainerId, bg.Bookmarks
+						?.Where(b => b.BookmarkId != action.BookmarkId)
+						.ToList()))
+				.ToList();
+
+			return state with {
+				CurrentContainerState = state.CurrentContainerState with {
+					Container = new BookmarkContainerDto(container.BookmarkContainerId,
+						container.Title, groups)
+				}
+			};
+		}
 	}
 }

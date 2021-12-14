@@ -1,5 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Start.Shared {
 	public class BookmarkDto {
@@ -11,14 +11,19 @@ namespace Start.Shared {
 		[StringLength(5000)]
 		public string? Notes { get; set; }
 
-		public BookmarkDto(string title, string url, string? notes) {
+		public int BookmarkGroupId { get; set; }
+
+		public BookmarkDto(string title, string url, string? notes, int bookmarkGroupId) {
 			this.Title = title;
 			this.Url = url;
 			this.Notes = notes;
+			this.BookmarkGroupId = bookmarkGroupId;
 		}
 
-		public BookmarkDto(int bookmarkId, string title, string url, string? notes)
-			: this(title, url, notes) {
+		[JsonConstructor]
+		public BookmarkDto(int bookmarkId, string title, string url, string? notes,
+			int bookmarkGroupId)
+			: this(title, url, notes, bookmarkGroupId) {
 			this.BookmarkId = bookmarkId;
 		}
 	}

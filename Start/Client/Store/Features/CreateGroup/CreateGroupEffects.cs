@@ -33,7 +33,13 @@ namespace Start.Client.Store.Features.CreateGroup {
 					return;
 				}
 
-				dispatch.Dispatch(new AddBookmarkGroupAction(action.NewGroup));
+				if (apiResponse.Content == null) {
+					dispatch.Dispatch(new ErrorFetchingCreateGroupAction(
+						"Error creating bookmark group"));
+					return;
+				}
+
+				dispatch.Dispatch(new AddBookmarkGroupAction(apiResponse.Content));
 				dispatch.Dispatch(new RecievedCreateGroupAction());
 				dispatch.Dispatch(new HideCreateGroupFormAction());
 			} catch (AccessTokenNotAvailableException e) {

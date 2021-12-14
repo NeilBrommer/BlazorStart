@@ -74,6 +74,10 @@ $dark-border-color: darken($dark-color, 10%);
 	// Cards
 	.card {
 		border-color: $dark-border-color;
+
+		.card-body {
+			background-color: $dark-bg-color-dark;
+		}
 	}
 
 
@@ -123,5 +127,21 @@ $dark-border-color: darken($dark-color, 10%);
 	// Custom
 	#sidebar .accountActions {
 		border-top-color: $dark-border-color;
+	}
+
+	ul.bookmarks {
+		.bookmark {
+			&:not(:last-child) {
+				border-bottom: solid 1px $dark-border-color;
+			}
+
+			a, a:visited {
+				color: $dark-primary-color;
+			}
+
+			a:hover {
+				background-color: $dark-bg-color;
+			}
+		}
 	}
 }

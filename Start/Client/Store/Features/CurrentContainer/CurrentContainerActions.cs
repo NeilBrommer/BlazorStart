@@ -44,4 +44,20 @@ namespace Start.Client.Store.Features.CurrentContainer {
 			this.BookmarkGroupId = bookmarkGroupId;
 		}
 	}
+
+	public class AddBookmarkAction {
+		public BookmarkDto Bookmark { get; init; }
+
+		public AddBookmarkAction(BookmarkDto bookmark) {
+			this.Bookmark = bookmark;
+		}
+	}
+
+	public class RemoveBookmarkAction {
+		public int BookmarkId { get; init; }
+
+		public RemoveBookmarkAction(int bookmarkId) {
+			this.BookmarkId = bookmarkId;
+		}
+	}
 }

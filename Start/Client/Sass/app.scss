@@ -191,6 +191,32 @@
 ul.bookmarks {
 	list-style: none;
 	margin: 0;
+	margin-block: 0;
+
+	.bookmark {
+		margin-top: 0;
+
+		a {
+			display: inline-block;
+			width: 100%;
+			padding: 0.5em 0.83em;
+
+			&:hover {
+				text-decoration: none;
+				background-color: $bg-color-dark;
+			}
+		}
+
+		&:last-child {
+			a {
+				border-radius: 0 0 0.4em 0.4em;
+			}
+		}
+
+		&:not(:last-child) {
+			border-bottom: solid 1px $border-color;
+		}
+	}
 
 	li.noBookmarksItem {
 		margin-top: 0;

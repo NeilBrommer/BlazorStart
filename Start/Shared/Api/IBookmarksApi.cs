@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace Start.Shared.Api {
 	public interface IBookmarksApi {
-		[Get("{bookmarkId}")]
+		[Get("/{bookmarkId}")]
 		Task<ApiResponse<BookmarkDto?>> GetBookmark(int bookmarkId);
 
 		[Post("/Create")]
