@@ -51,7 +51,7 @@
                 @if (this.state.Value.EditMode)
                 {
                     <li class="addBookmarkItem">
-                        <button type="button" class="addBookmarkButton btn">
+                        <button type="button" class="addBookmarkButton btn" @onclick="this.OnCreateBookmarkClicked">
                             <i class="icon icon-plus"></i>
                             Create Bookmark
                         </button>

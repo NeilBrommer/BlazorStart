@@ -32,7 +32,7 @@ namespace Start.Server.Data.Services {
 			if (!BookmarkOwnershipTools.IsBookmarkGroupOwner(this.db, userId, bookmarkGroupId))
 				return null;
 
-			Bookmark newBookmark = new(title, url, bookmarkGroupId);
+			Bookmark newBookmark = new(title, url, notes, bookmarkGroupId);
 
 			await db.Bookmarks.AddAsync(newBookmark);
 			await db.SaveChangesAsync();

@@ -23,14 +23,15 @@ namespace Start.Server.Models {
 		/// <summary>The group the bookmark is in</summary>
 		public BookmarkGroup? BookmarkGroup { get; set; }
 
-		public Bookmark(string title, string url, int bookmarkGroupId) {
+		public Bookmark(string title, string url, string? notes, int bookmarkGroupId) {
 			this.Title = title;
 			this.Url = url;
+			this.Notes = notes;
 			this.BookmarkGroupId = bookmarkGroupId;
 		}
 
-		public Bookmark(int bookmarkId, string title, string url, int bookmarkGroupId)
-			: this(title, url, bookmarkGroupId) {
+		public Bookmark(int bookmarkId, string title, string url, string? notes, int bookmarkGroupId)
+			: this(title, url, notes, bookmarkGroupId) {
 			this.BookmarkId = bookmarkId;
 		}
 	}
