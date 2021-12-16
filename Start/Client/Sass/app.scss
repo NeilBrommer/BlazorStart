@@ -195,8 +195,14 @@ ul.bookmarks {
 
 	.bookmark {
 		margin-top: 0;
+		display: flex;
+		flex-direction: row;
 
-		a {
+		.bookmarkDetails {
+			flex: 1;
+		}
+
+		.bookmarkLink {
 			display: inline-block;
 			width: 100%;
 			padding: 0.5em 0.83em;

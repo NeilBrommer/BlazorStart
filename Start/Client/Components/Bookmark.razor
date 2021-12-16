@@ -1,20 +1,41 @@
-﻿<li class="bookmark">
+﻿@using Start.Client.Store.State
+@using Start.Client.Store.Features.DeleteBookmark
+@using Fluxor
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher dispatch
+@inject IState<RootState> state
+
+<li class="bookmark">
     @if (!String.IsNullOrEmpty(this.Model.Notes))
     {
-        <details>
+        <details class="bookmarkDetails">
             <summary>
                 <a href="@this.Model.Url" class="bookmarkLink">@this.Model.Title</a>
             </summary>
-            @this.Model.Notes
+            <pre>@this.Model.Notes</pre>
         </details>
     }
     else
     {
-        <a href="@this.Model.Url" class="bookmarkLink">@this.Model.Title</a>
+        <a href="@this.Model.Url" class="bookmarkLink bookmarkDetails">@this.Model.Title</a>
+    }
+
+    @if (this.state.Value.EditMode)
+    {
+        <button class="btn btn-link text-error" @onclick="this.OnDeleteBookmarkClick">
+            <i class="icon icon-delete"></i>
+        </button>
     }
 </li>
 
 @code {
     [Parameter]
     public BookmarkDto Model { get; set; } = null!;
+
+    public void OnDeleteBookmarkClick()
+    {
+        this.dispatch.Dispatch(new ShowDeleteBookmarkFormAction(this.Model));
+    }
 }
