@@ -1,4 +1,5 @@
-﻿@using Start.Client.Store.Features.DeleteContainer
+﻿@using Start.Client.Components.Shared
+@using Start.Client.Store.Features.DeleteContainer
 @using Fluxor
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
@@ -6,32 +7,35 @@
 @inject IDispatcher dispatch
 @inject IState<DeleteContainerState> state
 
-@{ string title = $"Delete Container \"{this.state.Value.BookmarkContainerTitleToDelete}\""; }
-
-<Dialog Title="@title" Active="this.state.Value.ShowDeleteContainerForm" OnClose="this.OnDialogClose">
-    @if (this.state.Value.DeleteContainerErrorMessage != null)
-    {
-        <Alert Type="Alert.AlertType.Error">
-            @this.state.Value.DeleteContainerErrorMessage
-        </Alert>
-    }
-
-    <p>
-        Are you sure you want to delete the bookmark container
-        "@this.state.Value.BookmarkContainerTitleToDelete"?
-    </p>
-    <div class="text-right">
-        @if (!this.state.Value.IsLoadingDeleteContainer)
+<Dialog Active="this.state.Value.ShowDeleteContainerForm" OnClose="this.OnDialogClose">
+    <Header>
+        Delete Container "@this.state.Value.BookmarkContainerTitleToDelete"
+    </Header>
+    <Body>
+        @if (this.state.Value.DeleteContainerErrorMessage != null)
         {
-            <button type="button" class="btn" @onclick="this.OnDialogClose">Cancel</button>
-            <button type="submit" class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+            <Alert Type="Alert.AlertType.Error">
+                @this.state.Value.DeleteContainerErrorMessage
+            </Alert>
         }
-        else
-        {
-            <button type="button" disabled class="btn" @onclick="this.OnDialogClose">Cancel</button>
-            <button type="submit" disabled class="btn btn-error loading" @onclick="this.OnConfirmDelete">Delete</button>
-        }
-    </div>
+
+        <p>
+            Are you sure you want to delete the bookmark container
+            "@this.state.Value.BookmarkContainerTitleToDelete"?
+        </p>
+        <div class="text-right">
+            @if (!this.state.Value.IsLoadingDeleteContainer)
+            {
+                <button type="button" class="btn" @onclick="this.OnDialogClose">Cancel</button>
+                <button type="submit" class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+            }
+            else
+            {
+                <button type="button" disabled class="btn" @onclick="this.OnDialogClose">Cancel</button>
+                <button type="submit" disabled class="btn btn-error loading" @onclick="this.OnConfirmDelete">Delete</button>
+            }
+        </div>
+    </Body>
 </Dialog>
 
 @code {

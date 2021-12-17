@@ -1,4 +1,5 @@
-﻿@using Start.Client.Store.Features.CreateBookmark
+﻿@using Start.Client.Components.Shared
+@using Start.Client.Store.Features.CreateBookmark
 @using Fluxor
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
@@ -7,63 +8,68 @@
 @inject IDispatcher dispatch
 @inject IState<CreateBookmarkState> state
 
-<Dialog Title="Create Bookmark" Active="this.state.Value.ShowCreateBookmarkForm" OnClose="this.OnDialogClose">
-    <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
-        <DataAnnotationsValidator />
+<Dialog Active="this.state.Value.ShowCreateBookmarkForm" OnClose="this.OnDialogClose">
+    <Header>
+        Create Bookmark
+    </Header>
+    <Body>
+        <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
+            <DataAnnotationsValidator />
 
-        @if (this.state.Value.CreateBookmarkErrorMessage != null)
-        {
-            <Alert Type="Alert.AlertType.Error">
-                @this.state.Value.CreateBookmarkErrorMessage
-            </Alert>
-        }
+            @if (this.state.Value.CreateBookmarkErrorMessage != null)
+            {
+                <Alert Type="Alert.AlertType.Error">
+                    @this.state.Value.CreateBookmarkErrorMessage
+                </Alert>
+            }
 
-        <ValidationSummary />
+            <ValidationSummary />
 
-        <div class="form-group">
-            <div class="container">
-                <div class="columns">
-                    <div class="column col-12">
-                        <label for="createBookmarkTitle">Title</label>
-                        <InputText id="createBookmarkTitle" name="createBookmarkTitle"
-                                   class="form-input" @bind-Value="this.Model.Title" />
+            <div class="form-group">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column col-12">
+                            <label for="createBookmarkTitle">Title</label>
+                            <InputText id="createBookmarkTitle" name="createBookmarkTitle"
+                                       class="form-input" @bind-Value="this.Model.Title" />
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column col-12">
+                            <label for="createBookmarkUrl">URL</label>
+                            <input type="url" name="createBookmarkUrl" class="form-input"
+                                   @bind-value="this.Model.Url" />
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column col-12">
+                            <label for="createBookmarkNotes">Notes</label>
+                            <InputTextArea name="createBookmarkNotes" class="form-input"
+                                           @bind-Value="this.Model.Notes" />
+                        </div>
                     </div>
                 </div>
-                <div class="columns">
-                    <div class="column col-12">
-                        <label for="createBookmarkUrl">URL</label>
-                        <input type="url" name="createBookmarkUrl" class="form-input"
-                               @bind-value="this.Model.Url" />
-                    </div>
-                </div>
-                <div class="columns">
-                    <div class="column col-12">
-                        <label for="createBookmarkNotes">Notes</label>
-                        <InputTextArea name="createBookmarkNotes" class="form-input"
-                                       @bind-Value="this.Model.Notes" />
+                <div class="container">
+                    <div class="columns">
+                        <div class="column col-12 text-right">
+                            @if (this.state.Value.IsLoadingCreateBookmark)
+                            {
+                                <button type="submit" disabled class="btn btn-primary loading">
+                                    <i class="icon icon-plus"></i> Create
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon icon-plus"></i> Create
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="container">
-                <div class="columns">
-                    <div class="column col-12 text-right">
-                        @if (this.state.Value.IsLoadingCreateBookmark)
-                        {
-                            <button type="submit" disabled class="btn btn-primary loading">
-                                <i class="icon icon-plus"></i> Create
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-primary">
-                                <i class="icon icon-plus"></i> Create
-                            </button>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </EditForm>
+        </EditForm>
+    </Body>
 </Dialog>
 
 @code {

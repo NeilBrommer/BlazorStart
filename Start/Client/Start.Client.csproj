@@ -132,6 +132,7 @@
     <None Remove="Store\Features\DeleteGroup\" />
     <None Remove="Store\Features\CreateBookmark\" />
     <None Remove="Store\Features\DeleteBookmark\" />
+    <None Remove="Components\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\Spectre\" />
@@ -151,5 +152,6 @@
     <Folder Include="Store\Features\DeleteGroup\" />
     <Folder Include="Store\Features\CreateBookmark\" />
     <Folder Include="Store\Features\DeleteBookmark\" />
+    <Folder Include="Components\Shared\" />
   </ItemGroup>
 </Project>

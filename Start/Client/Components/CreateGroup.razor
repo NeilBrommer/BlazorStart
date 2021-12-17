@@ -1,4 +1,5 @@
-﻿@using Start.Client.Store.Features.CreateGroup
+﻿@using Start.Client.Components.Shared
+@using Start.Client.Store.Features.CreateGroup
 @using Fluxor
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
@@ -7,53 +8,58 @@
 @inject IDispatcher dispatch
 @inject IState<CreateGroupState> state
 
-<Dialog Title="Create Bookmark Group" Active="this.state.Value.ShowCreateGroupForm" OnClose="this.OnDialogClose">
-    <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
-        <DataAnnotationsValidator />
+<Dialog Active="this.state.Value.ShowCreateGroupForm" OnClose="this.OnDialogClose">
+    <Header>
+        Create Bookmark Group
+    </Header>
+    <Body>
+        <EditForm Model="this.Model" OnValidSubmit="this.OnSubmit">
+            <DataAnnotationsValidator />
 
-        @if (this.state.Value.CreateGroupErrorMessage != null)
-        {
-            <Alert Type="Alert.AlertType.Error">
-                @this.state.Value.CreateGroupErrorMessage
-            </Alert>
-        }
+            @if (this.state.Value.CreateGroupErrorMessage != null)
+            {
+                <Alert Type="Alert.AlertType.Error">
+                    @this.state.Value.CreateGroupErrorMessage
+                </Alert>
+            }
 
-        <ValidationSummary />
+            <ValidationSummary />
 
-        <div class="form-group">
-            <div class="container">
-                <div class="columns">
-                    <div class="column col-10">
-                        <label for="createBookmarkGroupTitle">Title</label>
-                        <InputText id="createBookmarkGroupTitle" name="createBookmarkGroupTitle"
-                                   class="form-input" @bind-Value="this.Model.Title" />
+            <div class="form-group">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column col-10">
+                            <label for="createBookmarkGroupTitle">Title</label>
+                            <InputText id="createBookmarkGroupTitle" name="createBookmarkGroupTitle"
+                                       class="form-input" @bind-Value="this.Model.Title" />
+                        </div>
+                        <div class="column col-2">
+                            <label for="createBookmarkGroupColor">Color</label>
+                            <input type="color" name="createBookmarkGroupColor" @bind="this.Model.Color" />
+                        </div>
                     </div>
-                    <div class="column col-2">
-                        <label for="createBookmarkGroupColor">Color</label>
-                        <input type="color" name="createBookmarkGroupColor" @bind="this.Model.Color" />
+                </div>
+                <div class="container">
+                    <div class="columns">
+                        <div class="column col-12 text-right">
+                            @if (this.state.Value.IsLoadingCreateGroup)
+                            {
+                                <button type="submit" disabled class="btn btn-primary loading">
+                                    <i class="icon icon-plus"></i> Create
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon icon-plus"></i> Create
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="container">
-                <div class="columns">
-                    <div class="column col-12 text-right">
-                        @if (this.state.Value.IsLoadingCreateGroup)
-                        {
-                            <button type="submit" disabled class="btn btn-primary loading">
-                                <i class="icon icon-plus"></i> Create
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-primary">
-                                <i class="icon icon-plus"></i> Create
-                            </button>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </EditForm>
+        </EditForm>
+    </Body>
 </Dialog>
 
 @code {

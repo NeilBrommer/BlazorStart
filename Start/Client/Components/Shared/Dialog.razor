@@ -1,0 +1,46 @@
+﻿<div class="modal @(this.Active ? "active" : "")" role="dialog">
+    <a class="modal-overlay" @onclick="this.OnDialogClose" aria-label="Close"></a>
+    <div class="modal-container">
+        <div class="modal-header">
+            <a class="btn btn-clear float-right" @onclick="this.OnDialogClose" aria-label="Close"></a>
+            <div class="modal-title h5">@this.Header</div>
+        </div>
+        <div class="modal-body">
+            <div class="content">
+                @this.Body
+            </div>
+        </div>
+        @if (this.Footer != null)
+        {
+            <div class="modal-footer">
+                @this.Footer
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment Header { get; set; } = null!;
+    [Parameter]
+    public RenderFragment Body { get; set; } = null!;
+    [Parameter]
+    public RenderFragment? Footer { get; set; } = null;
+
+    [Parameter]
+    public bool Active { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    public void OnDialogClose()
+    {
+        if (this.OnClose.HasDelegate)
+        {
+            this.OnClose.InvokeAsync();
+        }
+        else
+        {
+            this.Active = false;
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿@using Start.Client.Store.Features.DeleteBookmark
+﻿@using Start.Client.Components.Shared
+@using Start.Client.Store.Features.DeleteBookmark
 @using Fluxor
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
@@ -6,52 +7,55 @@
 @inject IDispatcher dispatch
 @inject IState<DeleteBookmarkState> state
 
-@{ string title = $"Delete Bookmark \"{this.state.Value.BookmarkToDelete?.Title}\""; }
+<Dialog Active="this.state.Value.ShowDeleteBookmarkForm" OnClose="this.OnClose">
+    <Header>
+        Delete Bookmark "@this.state.Value.BookmarkToDelete?.Title"
+    </Header>
+    <Body>
+        @if (this.state.Value.DeleteBookmarkErrorMessage != null)
+        {
+            <Alert Type="Alert.AlertType.Error">
+                @this.state.Value.DeleteBookmarkErrorMessage
+            </Alert>
+        }
 
-<Dialog Title="@title" Active="this.state.Value.ShowDeleteBookmarkForm" OnClose="this.OnClose">
-    @if (this.state.Value.DeleteBookmarkErrorMessage != null)
-    {
-        <Alert Type="Alert.AlertType.Error">
-            @this.state.Value.DeleteBookmarkErrorMessage
-        </Alert>
-    }
+        @if (this.state.Value.BookmarkToDelete == null)
+        {
+            <Alert Type="Alert.AlertType.Error">
+                There is no bookmark to delete selected
+            </Alert>
+        }
+        else
+        {
+            <p>Are you sure you want to delete this bookmark?</p>
+            <dl>
+                <dt>Title</dt>
+                <dd>@this.state.Value.BookmarkToDelete.Title</dd>
 
-    @if (this.state.Value.BookmarkToDelete == null)
-    {
-        <Alert Type="Alert.AlertType.Error">
-            There is no bookmark to delete selected
-        </Alert>
-    }
-    else
-    {
-        <p>Are you sure you want to delete this bookmark?</p>
-        <dl>
-            <dt>Title</dt>
-            <dd>@this.state.Value.BookmarkToDelete.Title</dd>
+                <dt>URL</dt>
+                <dd>@this.state.Value.BookmarkToDelete.Url</dd>
 
-            <dt>URL</dt>
-            <dd>@this.state.Value.BookmarkToDelete.Url</dd>
+                @if (!string.IsNullOrWhiteSpace(this.state.Value.BookmarkToDelete.Notes))
+                {
+                    <dt>Notes</dt>
+                    <dd>@this.state.Value.BookmarkToDelete.Notes</dd>
+                }
+            </dl>
 
-            @if (!string.IsNullOrWhiteSpace(this.state.Value.BookmarkToDelete.Notes))
-            {
-                <dt>Notes</dt>
-                <dd>@this.state.Value.BookmarkToDelete.Notes</dd>
-            }
-        </dl>
-
-        <div class="text-right">
-            @if (!this.state.Value.IsLoadingDeleteBookmark)
-            {
-                <button type="button" class="btn" @onclick="this.OnClose">Cancel</button>
-                <button type="submit" class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
-            }
-            else
-            {
-                <button type="button" disabled class="btn" @onclick="this.OnClose">Cancel</button>
-                <button type="submit" disabled class="btn btn-error loading" @onclick="this.OnConfirmDelete">Delete</button>
-            }
-        </div>
-    }
+            <div class="text-right">
+                @if (!this.state.Value.IsLoadingDeleteBookmark)
+                {
+                    <button type="button" class="btn" @onclick="this.OnClose">Cancel</button>
+                    <button type="submit" class="btn btn-error" @onclick="this.OnConfirmDelete">Delete</button>
+                }
+                else
+                {
+                    <button type="button" disabled class="btn" @onclick="this.OnClose">Cancel</button>
+                    <button type="submit" disabled class="btn btn-error loading" @onclick="this.OnConfirmDelete">Delete</button>
+                }
+            </div>
+        }
+    </Body>
 </Dialog>
 
 @code {
