@@ -1,4 +1,5 @@
-﻿<div class="toast @AlertTypeToClass(this.Type)" role="alert">
+﻿<div class="toast @this.AlertTypeToClass(this.Type)" role="alert">
+    @this.AlertTypeToTitle(this.Type)
     @ChildContent
 </div>
 
@@ -17,6 +18,23 @@
             case AlertType.Success: return "toast-success";
             case AlertType.Info: return "toast-primary";
             default: return "";
+        }
+    }
+
+    private RenderFragment? AlertTypeToTitle(AlertType type)
+    {
+        switch (type)
+        {
+            case AlertType.Error:
+                return @<b>Error</b>;
+            case AlertType.Warning:
+                return @<b>Warning</b>;
+            case AlertType.Success:
+                return @<b>Success</b>;
+            case AlertType.Info:
+                return @<b>Info</b>;
+            default:
+                return null;
         }
     }
 
