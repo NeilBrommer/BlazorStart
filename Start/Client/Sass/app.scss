@@ -41,6 +41,33 @@
 }
 
 
+.tab li.tab-item:not(.tab-action) {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-right: 0.4rem;
+
+	a {
+		flex: 1;
+		margin-right: 0;
+	}
+
+	.btn-clear {
+		margin-top: 0;
+		margin-right: 0.4rem;
+	}
+
+	&.active {
+		border-bottom: solid 0.1rem $primary-color;
+
+		a {
+			border-bottom: none;
+			margin-right: 0;
+		}
+	}
+}
+
+
 /* Spectre's default is no padding */
 .container {
 	padding: 0.4rem;

@@ -7,7 +7,7 @@
 @inject IDispatcher dispatch
 @inject IState<RootState> state
 
-<div class="activeBookmarkContainer">
+<div class="activeBookmarkContainer" role="tabpanel">
     @if (this.state.Value.CurrentContainerState.ErrorMessage != null)
     {
         <Alert Type="Alert.AlertType.Error">

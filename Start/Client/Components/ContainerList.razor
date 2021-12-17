@@ -1,0 +1,77 @@
+﻿@using Fluxor
+@using Start.Client.Store.State
+@using Start.Client.Store.Features.CurrentContainer
+@using Start.Client.Store.Features.CreateContainer
+@using Start.Client.Store.Features.DeleteContainer
+@using Start.Client.Store.Features.Sidebar
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IState<RootState> state
+@inject IDispatcher dispatch
+
+<div id="containerTabStrip" class="px-2">
+    <button id="menuButton" class="btn btn-link" @onclick="this.ShowSidebar">
+        <i class="icon icon-menu"></i>
+    </button>
+    <ul class="containerList tab" role="tablist">
+        @foreach (BookmarkContainerDto container in this.state.Value.ContainerListState.Containers)
+        {
+            string itemClasses = "tab-item";
+            if (container.BookmarkContainerId == this.state.Value.CurrentContainerState.Container?.BookmarkContainerId)
+                itemClasses += " active";
+
+        <li class="@itemClasses" role="tab">
+            <a @onclick="() => OnContainerClicked(container.BookmarkContainerId)">
+                @container.Title
+            </a>
+            @if (this.state.Value.EditMode)
+            {
+                <button class="btn btn-clear" aria-label="Delete"
+                        @onclick="() => this.OnDeleteContainerClicked(container.BookmarkContainerId)">
+                </button>
+            }
+        </li>
+        }
+        @if (this.state.Value.EditMode)
+        {
+            <li class="tab-item tab-action">
+                <button @onclick="OnCreateContainerClicked" class="btn btn-link tooltip tooltip-left"
+                        title="Create New Container" aria-label="Create New Container"
+                        data-tooltip="Create Container">
+                    +
+                </button>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    protected void ShowSidebar()
+    {
+        dispatch.Dispatch(new ShowSidebarAction());
+    }
+
+    protected void OnContainerClicked(int bookmarkContainerId) {
+        dispatch.Dispatch(new LoadCurrentContainerAction(bookmarkContainerId));
+    }
+
+    protected void OnCreateContainerClicked()
+    {
+        dispatch.Dispatch(new ShowCreateContainerFormAction());
+    }
+
+    protected void OnDeleteContainerClicked(int bookmarkContainerId)
+    {
+        BookmarkContainerDto? bookmarkContainerToDelete = this.state.Value.ContainerListState
+            .Containers
+            ?.FirstOrDefault(bc => bc.BookmarkContainerId == bookmarkContainerId);
+
+        if (bookmarkContainerToDelete == null)
+            return;
+
+        this.dispatch.Dispatch(new ShowDeleteContainerFormAction(
+            bookmarkContainerToDelete.BookmarkContainerId, bookmarkContainerToDelete.Title));
+    }
+}
