@@ -65,7 +65,7 @@
     [Parameter]
     public EventCallback<BookmarkContainerDto> OnCreated { get; set; }
 
-    private BookmarkContainerDto Model { get; set; } = new BookmarkContainerDto("");
+    private BookmarkContainerDto Model { get; set; } = new BookmarkContainerDto("", 0);
 
     protected void OnSubmit()
     {

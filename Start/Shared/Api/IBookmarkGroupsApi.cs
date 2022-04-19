@@ -9,7 +9,7 @@ namespace Start.Shared.Api {
 
 		[Post("/Create")]
 		Task<ApiResponse<BookmarkGroupDto?>> CreateBookmarkGroup(string title, string color,
-			int bookmarkContainerId);
+			int sortOrder, int bookmarkContainerId);
 
 		[Delete("/Delete/{bookmarkGroupId}")]
 		Task<HttpResponseMessage> DeleteBookmarkGroup(int bookmarkGroupId);

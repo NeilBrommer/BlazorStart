@@ -11,26 +11,29 @@ namespace Start.Shared {
 		[Required(AllowEmptyStrings = false, ErrorMessage = "Color is required")]
 		[StringLength(7)]
 		public string Color { get; set; }
+		public int SortOrder { get; set; }
 		public int BookmarkContainerId { get; set; }
 
 		public IList<BookmarkDto>? Bookmarks { get; set; }
 
-		public BookmarkGroupDto(string title, string color, int bookmarkContainerId) {
+		public BookmarkGroupDto(string title, string color, int sortOrder,
+			int bookmarkContainerId) {
 			this.Title = title;
 			this.Color = color;
+			this.SortOrder = sortOrder;
 			this.BookmarkContainerId = bookmarkContainerId;
 		}
 
-		public BookmarkGroupDto(int bookmarkGroupId, string title, string color,
+		public BookmarkGroupDto(int bookmarkGroupId, string title, string color, int sortOrder,
 			int bookmarkContainerId)
-			: this(title, color, bookmarkContainerId) {
+			: this(title, color, sortOrder, bookmarkContainerId) {
 			this.BookmarkGroupId = bookmarkGroupId;
 		}
 
 		[JsonConstructor]
-		public BookmarkGroupDto(int bookmarkGroupId, string title, string color,
+		public BookmarkGroupDto(int bookmarkGroupId, string title, string color, int sortOrder,
 			int bookmarkContainerId, IList<BookmarkDto>? bookmarks)
-			: this(bookmarkGroupId, title, color, bookmarkContainerId) {
+			: this(bookmarkGroupId, title, color, sortOrder, bookmarkContainerId) {
 			this.Bookmarks = bookmarks;
 		}
 	}

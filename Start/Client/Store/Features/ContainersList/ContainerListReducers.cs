@@ -21,7 +21,9 @@ namespace Start.Client.Store.Features.ContainersList {
 			RecievedContainerListAction action) {
 			return state with {
 				ContainerListState = state.ContainerListState with {
-					Containers = action.Containers.ToImmutableList(),
+					Containers = action.Containers
+						.SortContainers()
+						.ToImmutableList(),
 					IsLoadingContainersList = false,
 					ErrorMessage = null
 				}
@@ -43,7 +45,10 @@ namespace Start.Client.Store.Features.ContainersList {
 			AddContainerToListAction action) {
 			return state with {
 				ContainerListState = state.ContainerListState with {
-					Containers = state.ContainerListState.Containers.Add(action.NewContainer)
+					Containers = state.ContainerListState.Containers
+						.Add(action.NewContainer)
+						.SortContainers()
+						.ToImmutableList()
 				}
 			};
 		}
@@ -55,6 +60,7 @@ namespace Start.Client.Store.Features.ContainersList {
 				ContainerListState = state.ContainerListState with {
 					Containers = state.ContainerListState.Containers
 						.Where(c => c.BookmarkContainerId != action.ContainerIdToRemove)
+						.SortContainers()
 						.ToImmutableList()
 				}
 			};

@@ -25,8 +25,8 @@ This is a rewrite of my [New Tab Page project](https://github.com/NeilBrommer/Ne
 	- [x] Delete
 	- [ ] Edit
 - [ ] Manage bookmarks
-	- [ ] Create
-	- [ ] Delete
+	- [x] Create
+	- [x] Delete
 	- [ ] Edit
 - [x] Use [Refit](https://github.com/reactiveui/refit) for strongly typed API calls
 - [ ] Support choosing between storing data on the server or in IndexedDB

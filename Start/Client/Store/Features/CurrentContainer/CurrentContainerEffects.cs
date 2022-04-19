@@ -62,7 +62,7 @@ namespace Start.Client.Store.Features.CurrentContainer {
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 			if (!this.RootState.Value.ContainerListState.Containers.Any()) {
 				dispatch.Dispatch(new SubmitCreateContainerAction(
-					new BookmarkContainerDto("Default")));
+					new BookmarkContainerDto("Default", 0)));
 				return;
 			}
 

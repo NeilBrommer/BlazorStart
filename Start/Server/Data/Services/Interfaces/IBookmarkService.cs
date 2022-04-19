@@ -8,7 +8,7 @@ namespace Start.Server.Data.Services.Interfaces {
 		public Task<IList<Bookmark>> GetUserBookmarks(string userId);
 
 		public Task<Bookmark?> CreateBookmark(string userId, string title, string url,
-			string? notes, int bookmarkGroupId);
+			string? notes, int sortOrder, int bookmarkGroupId);
 		public Task<Bookmark?> UpdateBookmark(string userId, Bookmark bookmark);
 		public Task<bool> DeleteBookmark(string userId, int bookmarkId);
 	}

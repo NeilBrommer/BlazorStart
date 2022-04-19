@@ -27,12 +27,12 @@ namespace Start.Server.Data.Services {
 				.ToListAsync();
 		}
 
-		public async Task<Bookmark?> CreateBookmark(string userId, string title, string url, string? notes,
-			int bookmarkGroupId) {
+		public async Task<Bookmark?> CreateBookmark(string userId, string title, string url,
+			string? notes, int sortOrder, int bookmarkGroupId) {
 			if (!BookmarkOwnershipTools.IsBookmarkGroupOwner(this.db, userId, bookmarkGroupId))
 				return null;
 
-			Bookmark newBookmark = new(title, url, notes, bookmarkGroupId);
+			Bookmark newBookmark = new(title, url, notes, sortOrder, bookmarkGroupId);
 
 			await db.Bookmarks.AddAsync(newBookmark);
 			await db.SaveChangesAsync();

@@ -6,13 +6,17 @@ using Refit;
 using Start.Shared;
 using Start.Client.Store.Features.CurrentContainer;
 using System;
+using System.Linq;
 
 namespace Start.Client.Store.Features.CreateGroup {
 	public class CreateGroupEffects {
 		public IBookmarkGroupsApi BookmarkGroupsApi { get; init; }
+		public IBookmarkContainersApi BookmarkContainersApi { get; init; }
 
-		public CreateGroupEffects(IBookmarkGroupsApi bookmarksApi) {
+		public CreateGroupEffects(IBookmarkGroupsApi bookmarksApi,
+			IBookmarkContainersApi bookmarkContainersApi) {
 			this.BookmarkGroupsApi = bookmarksApi;
+			this.BookmarkContainersApi = bookmarkContainersApi;
 		}
 
 		[EffectMethod]
@@ -21,8 +25,22 @@ namespace Start.Client.Store.Features.CreateGroup {
 			dispatch.Dispatch(new FetchCreateGroupAction());
 
 			try {
+				ApiResponse<BookmarkContainerDto?>? containerResponse = await this
+					.BookmarkContainersApi
+					.GetBookmarkContainer(action.NewGroup.BookmarkContainerId);
+
+				if (containerResponse == null || containerResponse.Content == null) {
+					dispatch.Dispatch(new ErrorFetchingCreateGroupAction(
+						"There was an error checking the new group's bookmark container"));
+					return;
+				}
+
+				int sortOrder = !(containerResponse.Content.BookmarkGroups?.Any() ?? false)
+					? 0
+					: containerResponse.Content.BookmarkGroups.Max(g => g.SortOrder) + 1;
+
 				ApiResponse<BookmarkGroupDto?> apiResponse = await this.BookmarkGroupsApi
-					.CreateBookmarkGroup(action.NewGroup.Title, action.NewGroup.Color,
+					.CreateBookmarkGroup(action.NewGroup.Title, action.NewGroup.Color, sortOrder,
 					action.NewGroup.BookmarkContainerId);
 
 				Console.WriteLine("Status code: " + apiResponse.StatusCode);

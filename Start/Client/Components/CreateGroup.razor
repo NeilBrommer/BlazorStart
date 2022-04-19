@@ -63,13 +63,13 @@
 </Dialog>
 
 @code {
-    private BookmarkGroupDto Model { get; set; } = new("", "", 0);
+    private BookmarkGroupDto Model { get; set; } = new("", "", 0, 0);
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        this.Model = new BookmarkGroupDto("", "", state.Value.ContainerId);
+        this.Model = new BookmarkGroupDto("", "", 0, state.Value.ContainerId);
 
         // Keep the model's container ID up to date
         actionSubscriber.SubscribeToAction<ShowCreateGroupFormAction>(this,

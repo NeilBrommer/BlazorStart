@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Start.Server.Models {
@@ -15,6 +14,8 @@ namespace Start.Server.Models {
 		/// <summary>A hex color for the group</summary>
 		[MaxLength(6)]
 		public string Color { get; set; }
+		/// <summary>Used for sorting lists of bookmark groups</summary>
+		public int SortOrder { get; set; }
 
 		/// <summary>The unique ID of the container this group is in</summary>
 		public int BookmarkContainerId { get; set; }
@@ -24,14 +25,15 @@ namespace Start.Server.Models {
 		/// <summary>The bookmarks in this group</summary>
 		public List<Bookmark>? Bookmarks { get; set; }
 
-		public BookmarkGroup(string title, string color, int bookmarkContainerId) {
+		public BookmarkGroup(string title, string color, int sortOrder, int bookmarkContainerId) {
 			this.Title = title;
 			this.Color = color;
+			this.SortOrder = sortOrder;
 			this.BookmarkContainerId = bookmarkContainerId;
 		}
 
-		public BookmarkGroup(int bookmarkGroupId, string title, string color,
-			int bookmarkContainerId) : this(title, color, bookmarkContainerId) {
+		public BookmarkGroup(int bookmarkGroupId, string title, string color, int sortOrder,
+			int bookmarkContainerId) : this(title, color, sortOrder, bookmarkContainerId) {
 			this.BookmarkGroupId = bookmarkGroupId;
 		}
 	}

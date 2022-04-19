@@ -37,9 +37,10 @@ namespace Start.Server.Controllers {
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BookmarkDto))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> CreateBookmark(string title, string url, string? notes,
-			int bookmarkGroupId) {
+			int sortOrder, int bookmarkGroupId) {
 			BookmarkDto? bookmark = (await this.bookmarkService
-				.CreateBookmark(this.GetAuthorizedUserId(), title, url, notes, bookmarkGroupId))
+				.CreateBookmark(this.GetAuthorizedUserId(), title, url, notes, sortOrder,
+					bookmarkGroupId))
 				?.MapToDto();
 
 			if (bookmark == null)

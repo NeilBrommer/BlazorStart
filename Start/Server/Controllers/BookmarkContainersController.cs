@@ -54,9 +54,9 @@ namespace Start.Server.Controllers {
 		[Route("Create")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BookmarkContainerDto))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<IActionResult> CreateBookmarkContainer([FromBody] string title) {
+		public async Task<IActionResult> CreateBookmarkContainer(string title, int sortOrder) {
 			BookmarkContainerDto? container = (await this.bookmarkContainerService
-				.CreateBookmarkContainer(this.GetAuthorizedUserId(), title))
+				.CreateBookmarkContainer(this.GetAuthorizedUserId(), title, sortOrder))
 				?.MapToDto();
 
 			if (container == null)

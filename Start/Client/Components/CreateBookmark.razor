@@ -73,13 +73,13 @@
 </Dialog>
 
 @code {
-    protected BookmarkDto Model { get; set; } = new BookmarkDto("", "", null, 0);
+    protected BookmarkDto Model { get; set; } = new BookmarkDto("", "", null, 0, 0);
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        this.Model = new BookmarkDto("", "", null, this.state.Value.GroupId);
+        this.Model = new BookmarkDto("", "", null, 0, this.state.Value.GroupId);
 
         actionSubscriber.SubscribeToAction<ShowCreateBookmarkFormAction>(this,
             a => this.Model.BookmarkGroupId = a.GroupId);

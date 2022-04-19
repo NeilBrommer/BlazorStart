@@ -20,6 +20,11 @@ namespace Start.Client.Store.Features.CurrentContainer {
 		[ReducerMethod]
 		public static RootState ReceivedCurrentContainer(RootState state,
 			ReceivedCurrentContainerAction action) {
+			BookmarkContainerDto? container = action.BookmarkContainer;
+			container.BookmarkGroups = container.BookmarkGroups
+				?.SortGroups()
+				.ToList();
+
 			return state with {
 				CurrentContainerState = state.CurrentContainerState with {
 					Container = action.BookmarkContainer,
@@ -54,8 +59,9 @@ namespace Start.Client.Store.Features.CurrentContainer {
 			return state with {
 				CurrentContainerState = state.CurrentContainerState with {
 					Container = new BookmarkContainerDto(container.BookmarkContainerId,
-						container.Title, container.BookmarkGroups?
+						container.Title, container.SortOrder, container.BookmarkGroups?
 							.Concat(new List<BookmarkGroupDto> { action.BookmarkGroup })
+							.SortGroups()
 							.ToList())
 				}
 			};
@@ -72,7 +78,7 @@ namespace Start.Client.Store.Features.CurrentContainer {
 			return state with {
 				CurrentContainerState = state.CurrentContainerState with {
 					Container = new BookmarkContainerDto(container.BookmarkContainerId,
-						container.Title, container.BookmarkGroups?
+						container.Title, container.SortOrder, container.BookmarkGroups?
 							.Where(g => g.BookmarkGroupId != action.BookmarkGroupId)
 							.ToList())
 				}
@@ -90,9 +96,9 @@ namespace Start.Client.Store.Features.CurrentContainer {
 				?.Select(bg => {
 					if (bg.BookmarkGroupId == action.Bookmark.BookmarkGroupId) {
 						return new BookmarkGroupDto(bg.BookmarkGroupId, bg.Title, bg.Color,
-							bg.BookmarkContainerId,
-							bg.Bookmarks?
+							bg.SortOrder, bg.BookmarkContainerId, bg.Bookmarks?
 								.Concat(new List<BookmarkDto> { action.Bookmark })
+								.SortBookmarks()
 								.ToList());
 					}
 
@@ -103,7 +109,7 @@ namespace Start.Client.Store.Features.CurrentContainer {
 			return state with {
 				CurrentContainerState = state.CurrentContainerState with {
 					Container = new BookmarkContainerDto(container.BookmarkContainerId,
-						container.Title, groups)
+						container.Title, container.SortOrder, groups)
 				}
 			};
 		}
@@ -117,7 +123,7 @@ namespace Start.Client.Store.Features.CurrentContainer {
 
 			List<BookmarkGroupDto>? groups = container.BookmarkGroups
 				?.Select(bg => new BookmarkGroupDto(bg.BookmarkGroupId, bg.Title, bg.Color,
-					bg.BookmarkContainerId, bg.Bookmarks
+					bg.SortOrder, bg.BookmarkContainerId, bg.Bookmarks
 						?.Where(b => b.BookmarkId != action.BookmarkId)
 						.ToList()))
 				.ToList();
@@ -125,7 +131,7 @@ namespace Start.Client.Store.Features.CurrentContainer {
 			return state with {
 				CurrentContainerState = state.CurrentContainerState with {
 					Container = new BookmarkContainerDto(container.BookmarkContainerId,
-						container.Title, groups)
+						container.Title, container.SortOrder, groups)
 				}
 			};
 		}

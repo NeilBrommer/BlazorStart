@@ -10,7 +10,7 @@ namespace Start.Server.Data.Services.Interfaces {
 			bool includeGroups = false, bool includeBookmarks = false);
 
 		public Task<BookmarkContainer?> CreateBookmarkContainer(string userId,
-			string title);
+			string title, int sortOrder);
 		public Task<BookmarkContainer?> UpdateBookmarkContainer(string userId,
 			BookmarkContainer bookmarkContainer);
 		public Task<bool> DeleteBookmarkContainer(string userId, int bookmarkContainerId);

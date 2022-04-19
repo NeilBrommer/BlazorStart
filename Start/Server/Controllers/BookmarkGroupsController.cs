@@ -37,9 +37,9 @@ namespace Start.Server.Controllers {
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BookmarkGroupDto))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> CreateBookmarkGroup(string title, string color,
-			int bookmarkContainerId) {
+			int sortOrder, int bookmarkContainerId) {
 			BookmarkGroup? newGroup = await this.bookmarkGroupService
-				.CreateBookmarkGroup(this.GetAuthorizedUserId(), title, color, bookmarkContainerId);
+				.CreateBookmarkGroup(this.GetAuthorizedUserId(), title, color, sortOrder, bookmarkContainerId);
 
 			if (newGroup == null)
 				return BadRequest();

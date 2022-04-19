@@ -12,8 +12,8 @@ namespace Start.Shared.Api {
 		Task<ApiResponse<BookmarkContainerDto?>> GetBookmarkContainer(int bookmarkContainerId);
 
 		[Post("/Create")]
-		Task<ApiResponse<BookmarkContainerDto?>> CreateBookmarkContainer(
-			[Body(BodySerializationMethod.Serialized)] string title);
+		Task<ApiResponse<BookmarkContainerDto?>> CreateBookmarkContainer(string title,
+			int sortOrder);
 
 		[Delete("/Delete/{bookmarkContainerId}")]
 		Task<HttpResponseMessage> DeleteBookmarkContainer(int bookmarkContainerId);

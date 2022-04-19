@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Start.Server.Models {
 	/// <summary>A bookmark with display text and a URL to link to</summary>
@@ -17,21 +16,24 @@ namespace Start.Server.Models {
 		/// <summary>Arbitrary notes about the bookmark</summary>
 		[MaxLength(5000)]
 		public string? Notes { get; set; }
+		/// <summary>Used for sorting lists of bookmarks</summary>
+		public int SortOrder { get; set; }
 
 		/// <summary>The unique ID for the group the bookmark is in</summary>
 		public int BookmarkGroupId { get; set; }
 		/// <summary>The group the bookmark is in</summary>
 		public BookmarkGroup? BookmarkGroup { get; set; }
 
-		public Bookmark(string title, string url, string? notes, int bookmarkGroupId) {
+		public Bookmark(string title, string url, string? notes, int sortOrder, int bookmarkGroupId) {
 			this.Title = title;
 			this.Url = url;
 			this.Notes = notes;
+			this.SortOrder = sortOrder;
 			this.BookmarkGroupId = bookmarkGroupId;
 		}
 
-		public Bookmark(int bookmarkId, string title, string url, string? notes, int bookmarkGroupId)
-			: this(title, url, notes, bookmarkGroupId) {
+		public Bookmark(int bookmarkId, string title, string url, string? notes, int sortOrder,
+			int bookmarkGroupId) : this(title, url, notes, sortOrder, bookmarkGroupId) {
 			this.BookmarkId = bookmarkId;
 		}
 	}
