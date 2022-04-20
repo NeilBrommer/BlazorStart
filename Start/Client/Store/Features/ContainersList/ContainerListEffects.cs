@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fluxor;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Refit;
+using Start.Client.Store.Features.CreateContainer;
 using Start.Shared;
 using Start.Shared.Api;
 
@@ -33,8 +34,23 @@ namespace Start.Client.Store.Features.ContainersList {
 					return;
 				}
 
-				if (!bookmarkContainers.Any())
-					throw new NotImplementedException("Create bookmark effect has not been created");
+				if (!bookmarkContainers.Any()) {
+					dispatch.Dispatch(new SubmitCreateContainerAction(
+						new BookmarkContainerDto("Default", 0)));
+
+					// And load again
+					response = await this
+						.BookmarkContainersApi
+						.GetAllBookmarkContainers();
+
+					bookmarkContainers = response.Content?.ToList();
+
+					if (bookmarkContainers == null) {
+						dispatch.Dispatch(new ErrorFetchingContainerListAction(
+							"Failed to fetch containers list"));
+						return;
+					}
+				}
 
 				dispatch.Dispatch(new RecievedContainerListAction(bookmarkContainers));
 			}
