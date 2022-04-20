@@ -7,10 +7,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Start.Server.Data;
 using Start.Server.Models;
 
-namespace Start_Tests {
+namespace Start_Tests.Server {
 	public class UnitTestWithDb : IDisposable {
 		private const string InMemoryConnectionString = "DataSource=:memory:";
 		private SqliteConnection _connection;
+
+		protected string TestUserId { get; } = "test_user";
+		protected string InvalidUserId { get; } = "invalid_user";
+		protected BookmarkContainer TestBookmarkContainer { get; set; }
+		protected BookmarkGroup TestBookmarkGroup { get; set; }
+		protected Bookmark TestBookmark { get; set; }
 
 		protected readonly ApplicationDbContext _db;
 
@@ -34,8 +40,8 @@ namespace Start_Tests {
 
 		protected void FillDbTestData() {
 			ApplicationUser testUser = new ApplicationUser {
-				Id = "test_user",
-				UserName = "test_user"
+				Id = this.TestUserId,
+				UserName = "test_user_name"
 			};
 			_db.Users.Add(testUser);
 			_db.SaveChanges();
@@ -44,16 +50,24 @@ namespace Start_Tests {
 				0);
 			_db.BookmarkContainers.Add(testContainer);
 			_db.SaveChanges();
+			this.TestBookmarkContainer = testContainer;
 
 			BookmarkGroup testGroup = new BookmarkGroup("Test Group", "#000000", 0,
 				testContainer.BookmarkContainerId);
 			_db.BookmarkGroups.Add(testGroup);
 			_db.SaveChanges();
+			this.TestBookmarkGroup = testGroup;
 
 			Bookmark testBookmark = new Bookmark("Test Bookmark", "http://example.com",
 				"Test Notes", 0, testGroup.BookmarkGroupId);
 			_db.Bookmarks.Add(testBookmark);
 			_db.SaveChanges();
+			this.TestBookmark = testBookmark;
+		}
+
+		protected void ResetAndFillDb() {
+			this.ResetDb();
+			this.FillDbTestData();
 		}
 
 		/// <summary>
