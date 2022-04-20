@@ -7,72 +7,24 @@
     <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass ${ProjectDir}/Sass/Spectre/spectre.scss ${ProjectDir}/wwwroot/css/spectre/spectre.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass ${ProjectDir}/Sass/Spectre/spectre-exp.scss ${ProjectDir}/wwwroot/css/spectre/spectre-exp.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass ${ProjectDir}/Sass/Spectre/spectre-icons.scss ${ProjectDir}/wwwroot/css/spectre/spectre-icons.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass ${ProjectDir}/Sass/app.scss ${ProjectDir}/wwwroot/css/app.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass ${ProjectDir}/Sass/dark-mode.scss ${ProjectDir}/wwwroot/css/dark-mode.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass --style=compressed ${ProjectDir}/Sass/Spectre/spectre.scss ${ProjectDir}/wwwroot/css/spectre/spectre.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass --style=compressed ${ProjectDir}/Sass/Spectre/spectre-exp.scss ${ProjectDir}/wwwroot/css/spectre/spectre-exp.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass --style=compressed ${ProjectDir}/Sass/Spectre/spectre-icons.scss ${ProjectDir}/wwwroot/css/spectre/spectre-icons.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass --style=compressed ${ProjectDir}/Sass/app.scss ${ProjectDir}/wwwroot/css/app.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
-          <type>BeforeBuild</type>
-          <command>sass --style=compressed ${ProjectDir}/Sass/dark-mode.scss ${ProjectDir}/wwwroot/css/dark-mode.css</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Start' ">
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
+
+  <Target Name="CompileSass" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <Exec Command="sass $(ProjectDir)/Sass/Spectre/spectre.scss $(ProjectDir)/wwwroot/css/spectre/spectre.css" />
+      <Exec Command="sass $(ProjectDir)/Sass/Spectre/spectre-exp.scss $(ProjectDir)/wwwroot/css/spectre/spectre-exp.css" />
+      <Exec Command="sass $(ProjectDir)/Sass/Spectre/spectre-icons.scss $(ProjectDir)/wwwroot/css/spectre/spectre-icons.css" />
+      <Exec Command="sass $(ProjectDir)/Sass/app.scss $(ProjectDir)/wwwroot/css/app.css" />
+      <Exec Command="sass $(ProjectDir)/Sass/dark-mode.scss $(ProjectDir)/wwwroot/css/dark-mode.css" />
+  </Target>
+  <Target Name="CompileMinSass" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/Spectre/spectre.scss $(ProjectDir)/wwwroot/css/spectre/spectre.css" />
+      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/Spectre/spectre-exp.scss $(ProjectDir)/wwwroot/css/spectre/spectre-exp.css" />
+      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/Spectre/spectre-icons.scss $(ProjectDir)/wwwroot/css/spectre/spectre-icons.css" />
+      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/app.scss $(ProjectDir)/wwwroot/css/app.css" />
+      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/dark-mode.scss $(ProjectDir)/wwwroot/css/dark-mode.css" />
+  </Target>
   <Target Name="DeleteBuiltCss" AfterTargets="Clean">
       <Message Text="Deleting built CSS files" />
 
@@ -87,6 +39,9 @@
 
       <Delete Files="$(ProjectDir)/wwwroot/css/app.css" />
       <Delete Files="$(ProjectDir)/wwwroot/css/app.css.map" />
+
+      <Delete Files="$(ProjectDir)/wwwroot/css/dark-mode.css" />
+      <Delete Files="$(ProjectDir)/wwwroot/css/dark-mode.css.map" />
   </Target>
 
   <ItemGroup>
