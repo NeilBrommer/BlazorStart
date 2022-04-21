@@ -21,20 +21,24 @@ namespace Start.Client.Store.State {
 			dispatch.Dispatch(new LoadCurrentContainerAction(await GetSelectedContainerId()));
 		}
 
-		private async Task<int> GetSelectedContainerId() {
+		public async Task<int> GetSelectedContainerId() {
 			bool hasValue = await this.LocalStorage.ContainKeyAsync("SelectedContainer");
 
 			if (hasValue)
 				return await this.LocalStorage.GetItemAsync<int>("SelectedContainer");
 
 			// Default to the first container
-			int firstContainer = this.State.Value.ContainerListState.Containers
-				.First().BookmarkContainerId;
-			await this.SetSelectedContainer(firstContainer);
-			return firstContainer;
+			int? firstContainer = this.State.Value.ContainerListState.Containers
+				.FirstOrDefault()?.BookmarkContainerId;
+
+			if (firstContainer == null)
+				return 0;
+
+			await this.SetSelectedContainer(firstContainer ?? 0);
+			return firstContainer ?? 0;
 		}
 
-		protected async Task SetSelectedContainer(int selectedContainerId) {
+		public async Task SetSelectedContainer(int selectedContainerId) {
 			await this.LocalStorage.SetItemAsync("SelectedContainer", selectedContainerId);
 		}
 	}
