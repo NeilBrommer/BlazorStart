@@ -1,5 +1,7 @@
-# Project specific
+﻿# Project specific
 Start/Server/app.db
+Start/Server/app.db-shm
+Start/Server/app.db-wal
 # Compiled CSS files
 Start/Client/wwwRoot/css/
 

@@ -46,7 +46,7 @@ namespace Start.Server.Controllers {
 
 			return Created(
 				Url.Action(nameof(GetBookmarkGroup),
-					new { bookmarkGroupId = newGroup.BookmarkGroupId }),
+					new { bookmarkGroupId = newGroup.BookmarkGroupId })!,
 				newGroup.MapToDto());
 		}
 

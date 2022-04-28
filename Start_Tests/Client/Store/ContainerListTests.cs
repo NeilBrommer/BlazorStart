@@ -10,7 +10,7 @@ namespace Start_Tests.Client.Store {
 
 		[TestMethod]
 		public void OnFetchContainersList() {
-			base.Store.Dispatch(new FetchContainerListAction());
+			base.Dispatcher.Dispatch(new FetchContainerListAction());
 
 			Assert.IsTrue(base.State.Value.ContainerListState.IsLoadingContainersList);
 			Assert.AreEqual(0, this.State.Value.ContainerListState.Containers.Count);

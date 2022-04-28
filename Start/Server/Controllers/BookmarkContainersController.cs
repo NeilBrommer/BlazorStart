@@ -64,7 +64,7 @@ namespace Start.Server.Controllers {
 
 			return Created(
 				Url.Action(nameof(this.GetBookmarkContainer),
-					new { bookmarkContainerId = container.BookmarkContainerId }),
+					new { bookmarkContainerId = container.BookmarkContainerId })!,
 				container);
 		}
 

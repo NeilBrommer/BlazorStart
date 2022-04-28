@@ -20,7 +20,7 @@ namespace Start.Server.Data.Services {
 				.Where(bc => bc.BookmarkContainerId == bookmarkContainerId)
 				.If(includeGroups, q => q.Include(bc => bc.BookmarkGroups))
 				.If(includeBookmarks, q => q
-					.Include(bc => bc.BookmarkGroups)
+					.Include(bc => bc.BookmarkGroups!)
 					.ThenInclude(bg => bg.Bookmarks))
 				.SingleOrDefaultAsync();
 
@@ -40,7 +40,7 @@ namespace Start.Server.Data.Services {
 				.Where(bc => bc.ApplicationUserId == userId)
 				.If(includeGroups, q => q.Include(bc => bc.BookmarkGroups))
 				.If(includeBookmarks, q => q
-					.Include(bc => bc.BookmarkGroups)
+					.Include(bc => bc.BookmarkGroups!)
 					.ThenInclude(bg => bg.Bookmarks))
 				.ToListAsync();
 		}

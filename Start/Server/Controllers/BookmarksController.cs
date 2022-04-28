@@ -47,7 +47,7 @@ namespace Start.Server.Controllers {
 				return BadRequest();
 
 			return Created(
-				Url.Action(nameof(this.GetBookmark),new { bookmarkId = bookmark.BookmarkId }),
+				Url.Action(nameof(this.GetBookmark),new { bookmarkId = bookmark.BookmarkId })!,
 				bookmark);
 		}
 

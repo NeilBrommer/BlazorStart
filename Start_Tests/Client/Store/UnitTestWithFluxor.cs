@@ -10,6 +10,7 @@ namespace Start_Tests.Client.Store {
 	public abstract class UnitTestWithFluxor {
 		protected IServiceProvider ServiceProvider { get; set; }
 		protected IStore Store { get; set; }
+		protected IDispatcher Dispatcher { get; set; }
 		protected IState<RootState> State { get; set; }
 		// Add child states in the individual tests
 
@@ -30,6 +31,7 @@ namespace Start_Tests.Client.Store {
 				.AddScoped<IBookmarkContainersApi>(sp => new MockBookmarkContainersApi());
 
 			this.Store = this.BunitTc.Services.GetRequiredService<IStore>();
+			this.Dispatcher = this.BunitTc.Services.GetRequiredService<IDispatcher>();
 			this.State = this.BunitTc.Services.GetRequiredService<IState<RootState>>();
 			this.Store.InitializeAsync().Wait();
 		}
