@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Start_Tests", "Start_Tests\Start_Tests.csproj", "{74F33155-6FE2-409B-A5AC-52BC7433CE65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Start.Tests", "Start\Tests\Start.Tests.csproj", "{74F33155-6FE2-409B-A5AC-52BC7433CE65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
