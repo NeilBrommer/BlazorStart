@@ -1,5 +1,9 @@
-﻿@import "./spectre/_variables";
-@import "./spectre/mixins/_shadow";
+﻿@import "../node_modules/spectre.css/src/spectre.scss";
+@import "../node_modules/spectre.css/src/spectre-icons.scss";
+@import "../node_modules/spectre.css/src/spectre-exp.scss";
+
+@import "../node_modules/spectre.css/src/_variables";
+@import "../node_modules/spectre.css/src/mixins/_shadow";
 
 /* Validation */
 .valid.modified:not([type=checkbox]) {

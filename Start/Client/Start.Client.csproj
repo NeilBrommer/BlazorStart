@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,36 +12,14 @@
   </PropertyGroup>
 
   <Target Name="CompileSass" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-      <Exec Command="sass $(ProjectDir)/Sass/Spectre/spectre.scss $(ProjectDir)/wwwroot/css/spectre/spectre.css" />
-      <Exec Command="sass $(ProjectDir)/Sass/Spectre/spectre-exp.scss $(ProjectDir)/wwwroot/css/spectre/spectre-exp.css" />
-      <Exec Command="sass $(ProjectDir)/Sass/Spectre/spectre-icons.scss $(ProjectDir)/wwwroot/css/spectre/spectre-icons.css" />
-      <Exec Command="sass $(ProjectDir)/Sass/app.scss $(ProjectDir)/wwwroot/css/app.css" />
-      <Exec Command="sass $(ProjectDir)/Sass/dark-mode.scss $(ProjectDir)/wwwroot/css/dark-mode.css" />
+      <Exec Command="npm run build:dev" />
   </Target>
   <Target Name="CompileMinSass" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/Spectre/spectre.scss $(ProjectDir)/wwwroot/css/spectre/spectre.css" />
-      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/Spectre/spectre-exp.scss $(ProjectDir)/wwwroot/css/spectre/spectre-exp.css" />
-      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/Spectre/spectre-icons.scss $(ProjectDir)/wwwroot/css/spectre/spectre-icons.css" />
-      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/app.scss $(ProjectDir)/wwwroot/css/app.css" />
-      <Exec Command="sass --style=compressed $(ProjectDir)/Sass/dark-mode.scss $(ProjectDir)/wwwroot/css/dark-mode.css" />
+      <Exec Command="npm run build:prod" />
   </Target>
   <Target Name="DeleteBuiltCss" AfterTargets="Clean">
       <Message Text="Deleting built CSS files" />
-
-      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre.css" />
-      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre.css.map" />
-
-      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-exp.css" />
-      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-exp.css.map" />
-
-      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-icons.css" />
-      <Delete Files="$(ProjectDir)/wwwroot/css/spectre/spectre-icons.css.map" />
-
-      <Delete Files="$(ProjectDir)/wwwroot/css/app.css" />
-      <Delete Files="$(ProjectDir)/wwwroot/css/app.css.map" />
-
-      <Delete Files="$(ProjectDir)/wwwroot/css/dark-mode.css" />
-      <Delete Files="$(ProjectDir)/wwwroot/css/dark-mode.css.map" />
+      <RemoveDir Directories="$(ProjectDir)/wwwroot/css" />
   </Target>
 
   <ItemGroup>
@@ -83,7 +61,6 @@
     <None Remove="Store\Features\CreateGroup\" />
     <None Remove="Store\Features\Sidebar\" />
     <None Remove="Sass\" />
-    <None Remove="Sass\Spectre\" />
     <None Remove="Store\Features\DeleteGroup\" />
     <None Remove="Store\Features\CreateBookmark\" />
     <None Remove="Store\Features\DeleteBookmark\" />
@@ -103,7 +80,6 @@
     <Folder Include="Store\Features\CreateGroup\" />
     <Folder Include="Store\Features\Sidebar\" />
     <Folder Include="Sass\" />
-    <Folder Include="Sass\Spectre\" />
     <Folder Include="Store\Features\DeleteGroup\" />
     <Folder Include="Store\Features\CreateBookmark\" />
     <Folder Include="Store\Features\DeleteBookmark\" />

@@ -3,6 +3,10 @@
 This is a rewrite of my [New Tab Page project](https://github.com/NeilBrommer/NewTabPage) using
 [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor).
 
+## Requirements
+
+Node.js must be installed for compiling SASS files.
+
 ## Structure
 
 - Bookmark containers (tabs along the top)
