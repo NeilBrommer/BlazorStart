@@ -53,9 +53,9 @@
     <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
     <PackageReference Include="Refit" Version="6.3.2" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
-    <PackageReference Include="Fluxor" Version="5.2.0" />
-    <PackageReference Include="Fluxor.Blazor.Web" Version="5.2.0" />
-    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.2.0" />
+    <PackageReference Include="Fluxor" Version="5.3.0" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="5.3.0" />
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.3.0" />
   </ItemGroup>
 
   <ItemGroup>
