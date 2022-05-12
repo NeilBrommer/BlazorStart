@@ -60,9 +60,47 @@ namespace Start.Server.Data.Services {
 				.IsBookmarkGroupOwner(this.db, userId, bookmarkGroup.BookmarkGroupId))
 				return null;
 
-			if (!BookmarkOwnershipTools
-				.IsBookmarkContainerOwner(this.db, userId, bookmarkGroup.BookmarkContainerId))
+			// If it's been moved to a new container
+			if (existingGroup.BookmarkContainerId != bookmarkGroup.BookmarkContainerId
+				&& !BookmarkOwnershipTools
+					.IsBookmarkContainerOwner(this.db, userId, bookmarkGroup.BookmarkContainerId))
 				return null;
+
+			if (existingGroup.BookmarkContainerId != bookmarkGroup.BookmarkContainerId) {
+				// It's been moved to a different container - shuffle the sort order around
+
+				List<BookmarkGroup>? oldContainerGroups = await db.BookmarkGroups
+					.Where(bg => bg.BookmarkContainerId == existingGroup.BookmarkContainerId)
+					.Where(bg => bg.SortOrder > existingGroup.SortOrder)
+					.ToListAsync();
+
+				oldContainerGroups.ForEach(bg => bg.SortOrder -= 1);
+
+				List<BookmarkGroup>? newContainerGroups = await db.BookmarkGroups
+					.Where(bg => bg.BookmarkContainerId == bookmarkGroup.BookmarkContainerId)
+					.Where(bg => bg.SortOrder >= bookmarkGroup.SortOrder)
+					.ToListAsync();
+
+				newContainerGroups.ForEach(bg => bg.SortOrder += 1);
+			}
+			else if (existingGroup.SortOrder != bookmarkGroup.SortOrder) {
+				// The group was moved within the same container
+
+				List<BookmarkGroup>? containerGroups = await db.BookmarkGroups
+					.Where(bg => bg.BookmarkContainerId == bookmarkGroup.BookmarkContainerId)
+					.Where(bg => bg.BookmarkGroupId != bookmarkGroup.BookmarkGroupId)
+					.ToListAsync();
+
+				containerGroups
+					.Where(bg => bg.SortOrder > existingGroup.SortOrder)
+					.ToList()
+					.ForEach(bg => bg.SortOrder -= 1);
+
+				containerGroups
+					.Where(bg => bg.SortOrder > bookmarkGroup.SortOrder)
+					.ToList()
+					.ForEach(bg => bg.SortOrder += 1);
+			}
 
 			this.db.Entry(bookmarkGroup).State = EntityState.Modified;
 			await this.db.SaveChangesAsync();
